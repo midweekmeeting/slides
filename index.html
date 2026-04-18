@@ -82,12 +82,7 @@
     justify-content: space-between;
     height: 56px;
     border-radius: 100px;
-    /* Rainbow border via conic-gradient */
-    background-image: conic-gradient(
-      from 0deg,
-      #e40303, #ff8c00, #ffed00, #008026, #004dff, #750787, #e40303
-    );
-    background-origin: border-box;
+    background: var(--nav-border-gradient, #fff);
   }
 
   /* Inner dark fill — leaves 1px rainbow border visible */
@@ -497,6 +492,22 @@ sections.forEach((sec, si) => {
   navList.appendChild(li);
 });
 
+function buildNavGradient() {
+  const navRect = nav.getBoundingClientRect();
+  const lis = navList.querySelectorAll('li');
+  if (!lis.length || !navRect.width) return;
+  const stops = [];
+  lis.forEach((li, i) => {
+    const rect = li.getBoundingClientRect();
+    const center = ((rect.left - navRect.left) + rect.width / 2) / navRect.width * 100;
+    const col = (sectionColors[i] || sectionColors[0]).color;
+    if (i === 0) stops.push(`${col} 0%`);
+    stops.push(`${col} ${center.toFixed(1)}%`);
+    if (i === lis.length - 1) stops.push(`${col} 100%`);
+  });
+  navList.style.background = `linear-gradient(to right, ${stops.join(', ')})`;
+}
+
 function setActiveColor(si) {
   const c = sectionColors[si] || sectionColors[0];
   document.documentElement.style.setProperty('--active-color', c.color);
@@ -623,10 +634,10 @@ function go(idx) {
 
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('s0').classList.add('active');
-  setTimeout(() => activateNavItem(0), 50);
+  setTimeout(() => { buildNavGradient(); activateNavItem(0); }, 50);
 });
 
-window.addEventListener('resize', () => activateNavItem(flat[cur].si));
+window.addEventListener('resize', () => { buildNavGradient(); activateNavItem(flat[cur].si); });
 </script>
 </body>
 </html>
