@@ -549,7 +549,7 @@ function buildChipsSlide(idx) {
           ${milestones.map(m=>`<img id="chip-${m}" src="chips/${m}.png" alt="${m} chip">`).join('')}
         </div>
         <div class="chips-controls">
-          <h2 style="display:flex;align-items:center;gap:0.6rem;">What milestone are we celebrating?<button onclick="clearChip()" title="Clear selection" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;color:var(--active-color);opacity:0.5;transition:opacity 0.15s, color 0.3s ease;flex-shrink:0;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="22" height="22" fill="currentColor"><path d="M610.4 325.8L602.8 335.1C586.4 355 567.1 372.6 546.6 388.4L601.1 482.8L559.5 506.8L507.1 416C490.1 426.6 470.9 436.8 449.8 445.6L477.6 549.5L431.2 561.9L404.1 461C385.2 466 365.2 469.5 344.1 471.1L344.1 576.1L296.1 576.1L296.1 471.1C275 469.5 255 466 236.1 461L209.1 561.9L162.7 549.5L190.5 445.6C169.4 436.9 150.2 426.7 133.2 416.1L80.8 506.9L39.2 482.9L93.6 388.6C73.3 372.7 54 355.1 37.6 335.2L30 325.9L67.2 295.7L74.7 305C93.7 327.9 117.5 347.5 141.8 364.4C185.3 394.7 246.6 424.1 320.1 424.1C393.6 424.1 454.8 394.7 498.4 364.4C522.7 347.5 546.5 327.8 565.5 305L573 295.7L610.3 325.9z"/></svg></button></h2>
+          <h2 style="display:flex;align-items:center;gap:0.6rem;">What milestone are we celebrating?<button id="eyeToggleBtn" onclick="toggleEye()" title="Clear selection" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;color:var(--active-color);opacity:0.5;transition:opacity 0.15s, color 0.3s ease;flex-shrink:0;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'"><svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="22" height="22" fill="currentColor"><path id="eyePath" d="M610.4 325.8L602.8 335.1C586.4 355 567.1 372.6 546.6 388.4L601.1 482.8L559.5 506.8L507.1 416C490.1 426.6 470.9 436.8 449.8 445.6L477.6 549.5L431.2 561.9L404.1 461C385.2 466 365.2 469.5 344.1 471.1L344.1 576.1L296.1 576.1L296.1 471.1C275 469.5 255 466 236.1 461L209.1 561.9L162.7 549.5L190.5 445.6C169.4 436.9 150.2 426.7 133.2 416.1L80.8 506.9L39.2 482.9L93.6 388.6C73.3 372.7 54 355.1 37.6 335.2L30 325.9L67.2 295.7L74.7 305C93.7 327.9 117.5 347.5 141.8 364.4C185.3 394.7 246.6 424.1 320.1 424.1C393.6 424.1 454.8 394.7 498.4 364.4C522.7 347.5 546.5 327.8 565.5 305L573 295.7L610.3 325.9z"/></svg></button></h2>
           <div class="milestone-grid">
             ${milestones.map(m=>`<button class="milestone-btn" onclick="showChip('${m}',this)">${m}</button>`).join('')}
           </div>
@@ -615,11 +615,20 @@ flat.forEach((slide, idx) => {
   slidesEl.appendChild(div);
 });
 
-function clearChip() {
+const EYE_CLOSED = "M610.4 325.8L602.8 335.1C586.4 355 567.1 372.6 546.6 388.4L601.1 482.8L559.5 506.8L507.1 416C490.1 426.6 470.9 436.8 449.8 445.6L477.6 549.5L431.2 561.9L404.1 461C385.2 466 365.2 469.5 344.1 471.1L344.1 576.1L296.1 576.1L296.1 471.1C275 469.5 255 466 236.1 461L209.1 561.9L162.7 549.5L190.5 445.6C169.4 436.9 150.2 426.7 133.2 416.1L80.8 506.9L39.2 482.9L93.6 388.6C73.3 372.7 54 355.1 37.6 335.2L30 325.9L67.2 295.7L74.7 305C93.7 327.9 117.5 347.5 141.8 364.4C185.3 394.7 246.6 424.1 320.1 424.1C393.6 424.1 454.8 394.7 498.4 364.4C522.7 347.5 546.5 327.8 565.5 305L573 295.7L610.3 325.9z";
+const EYE_OPEN = "M320 144C254.8 144 201.2 173.6 160.1 211.7C121.6 247.5 95 290 81.4 320C95 350 121.6 392.5 160.1 428.3C201.2 466.4 254.8 496 320 496C385.2 496 438.8 466.4 479.9 428.3C518.4 392.5 545 350 558.6 320C545 290 518.4 247.5 479.9 211.7C438.8 173.6 385.2 144 320 144zM127.4 176.6C174.5 132.8 239.2 96 320 96C400.8 96 465.5 132.8 512.6 176.6C559.4 220.1 590.7 272 605.6 307.7C608.9 315.6 608.9 324.4 605.6 332.3C590.7 368 559.4 420 512.6 463.4C465.5 507.1 400.8 544 320 544C239.2 544 174.5 507.2 127.4 463.4C80.6 419.9 49.3 368 34.4 332.3C31.1 324.4 31.1 315.6 34.4 307.7C49.3 272 80.6 220 127.4 176.6zM320 400C364.2 400 400 364.2 400 320C400 290.4 383.9 264.5 360 250.7C358.6 310.4 310.4 358.6 250.7 360C264.5 383.9 290.4 400 320 400zM240.4 311.6C242.9 311.9 245.4 312 248 312C283.3 312 312 283.3 312 248C312 245.4 311.8 242.9 311.6 240.4C274.2 244.3 244.4 274.1 240.5 311.5zM286 196.6C296.8 193.6 308.2 192.1 319.9 192.1C328.7 192.1 337.4 193 345.7 194.7C346 194.8 346.2 194.8 346.5 194.9C404.4 207.1 447.9 258.6 447.9 320.1C447.9 390.8 390.6 448.1 319.9 448.1C258.3 448.1 206.9 404.6 194.7 346.7C192.9 338.1 191.9 329.2 191.9 320.1C191.9 309.1 193.3 298.3 195.9 288.1C196.1 287.4 196.2 286.8 196.4 286.2C208.3 242.8 242.5 208.6 285.9 196.7z";
+
+function setEyeState(open) {
+  const path = document.getElementById('eyePath');
+  if (path) path.setAttribute('d', open ? EYE_OPEN : EYE_CLOSED);
+}
+
+function toggleEye() {
   document.querySelectorAll('.chips-image-panel img').forEach(img => img.classList.remove('visible'));
   document.querySelectorAll('.milestone-btn').forEach(b => b.classList.remove('active'));
   const placeholder = document.getElementById('chipsPlaceholder');
   if (placeholder) placeholder.classList.remove('hidden');
+  setEyeState(false);
 }
 
 function showChip(milestone, btn) {
@@ -629,6 +638,7 @@ function showChip(milestone, btn) {
   const img = document.getElementById('chip-' + milestone);
   if (img) { void img.offsetWidth; img.classList.add('visible'); }
   btn.classList.add('active');
+  setEyeState(true);
 }
 
 function go(idx) {
