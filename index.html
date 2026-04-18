@@ -7,56 +7,190 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; overflow: hidden; }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #fff;
-    color: #111;
+    background: hsl(221deg 16% 6%);
+    color: #fff;
     height: 100vh;
   }
+
   .shell {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    padding: 2rem 3rem;
+    padding: 1.5rem 2.5rem;
   }
-  .nav-circles {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 1.75rem;
-    justify-content: center;
+
+  /* ── Glowing pill nav ── */
+  @layer properties {
+    @property --after-bg-position        { syntax:'<number>'; inherits:true; initial-value:0; }
+    @property --after-radial-bg-position { syntax:'<number>'; inherits:true; initial-value:0; }
+    @property --after-bg-width           { syntax:'<number>'; inherits:true; initial-value:100; }
+    @property --after-bg-opacity         { syntax:'<number>'; inherits:true; initial-value:20; }
+    @property --after-shadow-offset      { syntax:'<number>'; inherits:true; initial-value:15; }
+    @property --after-scale              { syntax:'<number>'; inherits:true; initial-value:0.85; }
+    @property --li-before-opacity        { syntax:'<number>'; inherits:true; initial-value:0; }
+  }
+
+  :root {
+    --body-bg-color: hsl(221deg 16% 6%);
+    --trs-easing: cubic-bezier(.41,-0.09,.55,1.09);
+    --trs-timing: 300ms;
+    --trs-delay: 80ms;
+  }
+
+  .nav {
+    transition:
+      --after-bg-position var(--trs-timing) var(--trs-easing) .2s,
+      --after-radial-bg-position var(--trs-timing) var(--trs-easing) .2s,
+      --after-bg-width var(--trs-timing) var(--trs-easing) .2s,
+      --after-bg-opacity var(--trs-timing) var(--trs-easing) .2s,
+      --li-before-opacity var(--trs-timing) var(--trs-easing) .2s;
+    background: var(--body-bg-color);
+    border-radius: 100px;
+    position: relative;
     flex-shrink: 0;
+    margin-bottom: 1.5rem;
   }
-  .circle-btn {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    border: 1.5px solid #d0d0d0;
-    background: #f5f5f5;
-    cursor: pointer;
-    font-size: 9px;
-    font-weight: 500;
-    color: #666;
+
+  .nav::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: calc(calc(var(--after-bg-width) * 1px) - 8px);
+    height: 100%;
+    background: rgb(255 255 255 / calc(var(--after-shadow-offset)*1%));
+    border-radius: 100px;
+    filter: blur(20px);
+    left: 0;
+    top: 0;
+    transform: translateX(calc(var(--after-bg-position) * 1px)) scale(1.1);
+  }
+
+  .nav ul {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    height: 56px;
+    border-radius: 100px;
+    background-image: radial-gradient(
+      ellipse 150px 100px
+      at calc(var(--after-radial-bg-position)*1px) bottom,
+      rgba(255,255,255,1) 0%,
+      rgba(255,255,255,20%) 100%
+    );
+  }
+
+  .nav ul::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    background: var(--body-bg-color);
+    top: 1px;
+    left: 1px;
+    border-radius: 100px;
+  }
+
+  .nav ul::after {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: 1;
+    width: calc(calc(var(--after-bg-width) * 1px) - 12px);
+    height: calc(100% - 12px);
+    background: linear-gradient(to bottom, rgb(255 255 255 / calc(calc(var(--after-bg-opacity,0)/10)*1%)), rgb(255 255 255 / 10%));
+    box-shadow: inset 0 -6px calc(var(--after-shadow-offset,0)*1px) rgb(255 255 255 / calc(var(--after-bg-opacity)*1%));
+    left: 6px;
+    top: 6px;
+    transform: translate(calc(var(--after-bg-position) * 1px), 0);
+    border-radius: 100px 12px 12px 100px;
+    transition:
+      --after-bg-opacity var(--trs-timing) var(--trs-easing) var(--trs-delay),
+      --after-shadow-offset var(--trs-timing) var(--trs-easing) var(--trs-delay),
+      border-radius var(--trs-timing) var(--trs-easing) var(--trs-delay);
+    pointer-events: none;
+  }
+
+  .nav ul:has(li.active:first-of-type a)::after  { border-radius: 100px 12px 12px 100px; }
+  .nav ul:has(li.active:last-of-type a)::after   { border-radius: 12px 100px 100px 12px; }
+  .nav ul:has(li.active:nth-child(n+2):nth-child(-n+8) a)::after { border-radius: 100px; }
+
+  .nav ul li {
+    padding: 0.6em 0.5em;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    perspective: 800px;
+  }
+
+  .nav ul li:not(.active):hover { --li-before-opacity: 0.3; }
+
+  .nav ul li::before {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-radius: 8px;
+    pointer-events: none;
+    user-select: none;
+    background: linear-gradient(to bottom, rgb(255 255 255 / 5%), rgb(255 255 255 / 35%));
+    opacity: var(--li-before-opacity);
+    transform: scale(var(--after-scale)) rotateY(calc(var(--tilt-bg-y) * 3 * -1deg)) rotateX(calc(var(--tilt-bg-x) * 3 * 1deg)) translateZ(15px);
+    transition:
+      --li-before-opacity var(--trs-timing) var(--trs-easing),
+      --after-scale calc(var(--trs-timing)/2) var(--trs-easing) calc(var(--trs-delay)/2);
+  }
+
+  .nav ul li:first-of-type::before { border-radius: 100px 12px 12px 100px; }
+  .nav ul li:last-of-type::before  { border-radius: 12px 100px 100px 12px; }
+
+  .nav ul li button {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgb(255 255 255 / 55%);
+    font-size: clamp(8px, 1vw, 11px);
+    font-weight: 500;
+    font-family: inherit;
     text-align: center;
-    line-height: 1.2;
-    padding: 4px;
-    transition: all 0.15s;
+    line-height: 1.25;
     white-space: pre;
-    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+    transition: color 0.2s;
+    padding: 0;
   }
-  .circle-btn:hover { border-color: #999; color: #111; }
-  .circle-btn.active { background: #111; color: #fff; border-color: #111; }
+
+  .nav ul li.active button { color: rgb(255 255 255 / 95%); }
+  .nav ul li:not(.active):hover button { color: rgb(255 255 255 / 75%); }
+
+  /* ── Slides ── */
   .slides-wrap {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
+
   .slide { display: none; flex: 1; flex-direction: column; overflow: hidden; }
   .slide.active { display: flex; }
+
   .slide-inner {
     flex: 1;
     display: flex;
@@ -65,75 +199,85 @@
     overflow: hidden;
     padding-bottom: 1rem;
   }
+
   .section-label {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.09em;
     text-transform: uppercase;
-    color: #999;
+    color: rgb(255 255 255 / 35%);
     margin-bottom: 0.6rem;
     flex-shrink: 0;
   }
+
   .slide-title {
     font-size: clamp(24px, 3vw, 36px);
     font-weight: 500;
-    color: #111;
+    color: #fff;
     margin-bottom: 1.25rem;
     line-height: 1.2;
     flex-shrink: 0;
   }
+
   .slide-subtitle {
-    font-size: clamp(13px, 1.4vw, 16px);
-    color: #888;
+    font-size: clamp(13px, 1.4vw, 15px);
+    color: rgb(255 255 255 / 45%);
     margin-bottom: 1rem;
     font-style: italic;
     flex-shrink: 0;
   }
+
   .slide-body {
-    font-size: clamp(17px, 2vw, 24px);
-    color: #222;
-    line-height: 1.8;
+    font-size: clamp(16px, 2vw, 23px);
+    color: rgb(255 255 255 / 80%);
+    line-height: 1.85;
   }
+
   .slide-body p { margin-bottom: 1rem; }
   .slide-body ol, .slide-body ul { padding-left: 1.5rem; }
   .slide-body li { margin-bottom: 0.65rem; line-height: 1.75; }
+
   .prayer-text {
     font-size: clamp(20px, 2.5vw, 30px);
     line-height: 2.1;
-    color: #111;
+    color: #fff;
     text-align: center;
     font-family: Georgia, "Times New Roman", serif;
   }
+
   .page-indicator {
-    font-size: 13px;
-    color: #aaa;
+    font-size: 12px;
+    color: rgb(255 255 255 / 30%);
     text-align: center;
     margin-bottom: 0.6rem;
     flex-shrink: 0;
   }
+
   .nav-btns {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid #eee;
+    border-top: 1px solid rgb(255 255 255 / 10%);
     padding-top: 1rem;
     flex-shrink: 0;
   }
+
   .nav-btn {
     background: transparent;
-    border: 1px solid #ddd;
+    border: 1px solid rgb(255 255 255 / 15%);
     border-radius: 8px;
     padding: 10px 28px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
-    color: #111;
-    transition: background 0.1s;
+    color: rgb(255 255 255 / 70%);
+    transition: background 0.1s, color 0.1s;
   }
-  .nav-btn:hover { background: #f5f5f5; }
+
+  .nav-btn:hover { background: rgb(255 255 255 / 8%); color: #fff; }
   .nav-btn:disabled { opacity: 0.2; cursor: default; }
 
-  /* Chips slide */
+  /* ── Chips ── */
   .chips-layout {
     display: flex;
     gap: 2rem;
@@ -141,6 +285,7 @@
     overflow: hidden;
     align-items: center;
   }
+
   .chips-image-panel {
     flex: 0 0 40%;
     display: flex;
@@ -149,6 +294,7 @@
     height: 100%;
     position: relative;
   }
+
   .chips-image-panel img {
     max-height: 100%;
     max-width: 100%;
@@ -159,30 +305,35 @@
     pointer-events: none;
     transition: none;
   }
+
   @keyframes chipPop {
-    0%   { opacity: 0; transform: scale(0.47) rotate(-12deg); }
-    55%  { opacity: 1; transform: scale(1) rotate(3deg); }
-    75%  { transform: scale(0.93) rotate(-1deg); }
-    100% { opacity: 1; transform: scale(0.97) rotate(0deg); }
+    0%   { opacity: 0; transform: scale(0.5) rotate(-12deg); }
+    55%  { opacity: 1; transform: scale(1.08) rotate(3deg); }
+    75%  { transform: scale(0.96) rotate(-1deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
   }
+
   .chips-image-panel img.visible {
-    animation: chipPop .5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: chipPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
+
   .chips-placeholder {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    border: 2px dashed #ddd;
+    border: 2px dashed rgb(255 255 255 / 15%);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ccc;
+    color: rgb(255 255 255 / 25%);
     font-size: 14px;
     text-align: center;
     padding: 1rem;
     transition: opacity 0.2s;
   }
+
   .chips-placeholder.hidden { opacity: 0; }
+
   .chips-controls {
     flex: 1;
     display: flex;
@@ -190,36 +341,42 @@
     gap: 0.5rem;
     overflow-y: auto;
   }
+
   .chips-controls h2 {
     font-size: clamp(18px, 2vw, 26px);
     font-weight: 500;
-    color: #111;
+    color: #fff;
     margin-bottom: 0.75rem;
   }
+
   .milestone-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
     gap: 8px;
   }
+
   .milestone-btn {
     padding: 10px 6px;
-    border: 1px solid #ddd;
+    border: 1px solid rgb(255 255 255 / 12%);
     border-radius: 8px;
-    background: #f9f9f9;
+    background: rgb(255 255 255 / 5%);
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    color: #333;
+    color: rgb(255 255 255 / 65%);
     transition: all 0.12s;
     text-align: center;
+    font-family: inherit;
   }
-  .milestone-btn:hover { background: #f0f0f0; border-color: #bbb; }
-  .milestone-btn.active { background: #111; color: #fff; border-color: #111; }
 
-  /* Links slide */
+  .milestone-btn:hover { background: rgb(255 255 255 / 10%); border-color: rgb(255 255 255 / 25%); color: #fff; }
+  .milestone-btn.active { background: rgb(255 255 255 / 18%); color: #fff; border-color: rgb(255 255 255 / 40%); }
+
+  /* ── Links ── */
   .links-list { display: flex; flex-direction: column; gap: 1.25rem; }
+
   .link-card {
-    border: 1px solid #eee;
+    border: 1px solid rgb(255 255 255 / 10%);
     border-radius: 10px;
     padding: 1.25rem 1.5rem;
     text-decoration: none;
@@ -227,52 +384,33 @@
     transition: border-color 0.15s, background 0.15s;
     display: block;
   }
-  .link-card:hover { border-color: #bbb; background: #fafafa; }
+
+  .link-card:hover { border-color: rgb(255 255 255 / 25%); background: rgb(255 255 255 / 5%); }
+
   .link-card-label {
     font-size: clamp(11px, 1.2vw, 13px);
     font-weight: 500;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: #999;
+    color: rgb(255 255 255 / 35%);
     margin-bottom: 0.3rem;
   }
+
   .link-card-title {
     font-size: clamp(16px, 1.8vw, 22px);
     font-weight: 500;
-    color: #111;
+    color: #fff;
     margin-bottom: 0.2rem;
   }
-  .link-card-url { font-size: clamp(12px, 1.2vw, 14px); color: #888; }
 
-  @media (prefers-color-scheme: dark) {
-    body { background: #141414; color: #eee; }
-    .circle-btn { background: #222; border-color: #444; color: #aaa; }
-    .circle-btn:hover { border-color: #888; color: #eee; }
-    .circle-btn.active { background: #eee; color: #111; border-color: #eee; }
-    .slide-title { color: #eee; }
-    .section-label { color: #555; }
-    .slide-subtitle { color: #777; }
-    .slide-body { color: #ccc; }
-    .prayer-text { color: #eee; }
-    .page-indicator { color: #555; }
-    .nav-btns { border-top-color: #2a2a2a; }
-    .nav-btn { border-color: #333; color: #eee; }
-    .nav-btn:hover { background: #222; }
-    .chips-controls h2 { color: #eee; }
-    .milestone-btn { background: #1e1e1e; border-color: #333; color: #ccc; }
-    .milestone-btn:hover { background: #2a2a2a; border-color: #555; }
-    .milestone-btn.active { background: #eee; color: #111; border-color: #eee; }
-    .chips-placeholder { border-color: #333; color: #555; }
-    .link-card { border-color: #2a2a2a; }
-    .link-card:hover { border-color: #555; background: #1e1e1e; }
-    .link-card-title { color: #eee; }
-    .link-card-url { color: #666; }
-  }
+  .link-card-url { font-size: clamp(12px, 1.2vw, 14px); color: rgb(255 255 255 / 35%); }
 </style>
 </head>
 <body>
 <div class="shell">
-  <div class="nav-circles" id="navCircles"></div>
+  <nav class="nav" id="mainNav">
+    <ul id="navList"></ul>
+  </nav>
   <div class="slides-wrap" id="slides"></div>
 </div>
 
@@ -355,7 +493,7 @@ const sections = [
     label: "The Promises",
     pages: [
       { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<p>If we are painstaking about this phase of our development, we will be amazed before we are half way through.</p><ul><li>We are going to know a new freedom and a new happiness.</li><li>We will not regret the past nor wish to shut the door on it.</li><li>We will comprehend the word serenity and we will know peace.</li><li>No matter how far down the scale we have gone, we will see how our experience can benefit others.</li><li>That feeling of uselessness and self-pity will disappear.</li></ul>` },
-      { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<ul><li>We will lose interest in selfish things and gain interest in our fellows.</li><li>Self-seeking will slip away.</li><li>Our whole attitude and outlook upon life will change.</li><li>Fear of people and of economic insecurity will leave us.</li><li>We will intuitively know how to handle situations which used to baffle us.</li><li>We will suddenly realise that God is doing for us what we could not do for ourselves.</li></ul>` },
+      { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<ul><li>We will lose interest in selfish things and gain interest in our fellows.</li><li>We will lose interest in selfish things and gain interest in our fellows.</li><li>Self-seeking will slip away.</li><li>Our whole attitude and outlook upon life will change.</li><li>Fear of people and of economic insecurity will leave us.</li><li>We will intuitively know how to handle situations which used to baffle us.</li><li>We will suddenly realise that God is doing for us what we could not do for ourselves.</li></ul>` },
       { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<p>Are these extravagant promises? We think not.</p><p>They are being fulfilled among us — sometimes quickly, sometimes slowly. They will always materialise if we work for them.</p>` }
     ]
   }
@@ -369,21 +507,54 @@ sections.forEach((sec, si) => {
 });
 
 let cur = 0;
-const navEl = document.getElementById("navCircles");
-const slidesEl = document.getElementById("slides");
+const nav = document.getElementById('mainNav');
+const navList = document.getElementById('navList');
+const slidesEl = document.getElementById('slides');
 
+// Build nav items
 sections.forEach((sec, si) => {
-  const btn = document.createElement("button");
-  btn.className = "circle-btn";
+  const li = document.createElement('li');
+  const btn = document.createElement('button');
   btn.textContent = sec.short;
-  btn.onclick = () => go(flat.findIndex(s => s.si === si));
-  navEl.appendChild(btn);
+  btn.onclick = () => {
+    const targetIdx = flat.findIndex(s => s.si === si);
+    go(targetIdx);
+    activateNavItem(li, btn);
+  };
+  btn.addEventListener('mousemove', (e) => {
+    const tilt = inverseMousePosition(btn, e);
+    nav.style.setProperty('--tilt-bg-y', tilt.x1 * 2);
+    nav.style.setProperty('--tilt-bg-x', tilt.y1 * 2);
+  });
+  li.appendChild(btn);
+  navList.appendChild(li);
 });
 
+function activateNavItem(li, btn) {
+  navList.querySelectorAll('li').forEach(l => l.classList.remove('active'));
+  li.classList.add('active');
+  const width = li.offsetWidth;
+  const offsetLeft = li.getBoundingClientRect().left - nav.getBoundingClientRect().left;
+  nav.style.setProperty('--after-bg-position', offsetLeft);
+  nav.style.setProperty('--after-radial-bg-position', offsetLeft + width / 2);
+  nav.style.setProperty('--after-bg-width', width);
+}
+
+function inverseMousePosition(element, event) {
+  const rect = element.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  return {
+    x1: -(x - rect.width / 2) / 20,
+    y1: -(y - rect.height / 2) / 20,
+  };
+}
+
+// Build slides
 function buildChipsSlide(idx) {
-  const div = document.createElement("div");
-  div.className = "slide";
-  div.id = "s" + idx;
+  const div = document.createElement('div');
+  div.className = 'slide';
+  div.id = 's' + idx;
   div.innerHTML = `
     <div class="slide-inner" style="justify-content:flex-start;padding-top:0.5rem;">
       <div class="section-label">Chips</div>
@@ -401,22 +572,22 @@ function buildChipsSlide(idx) {
       </div>
     </div>
     <div class="nav-btns">
-      <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?"disabled":""}>← Back</button>
-      <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?"disabled":""}>Next →</button>
+      <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?'disabled':''}>← Back</button>
+      <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?'disabled':''}>Next →</button>
     </div>`;
   return div;
 }
 
 function buildLinksSlide(idx) {
-  const div = document.createElement("div");
-  div.className = "slide";
-  div.id = "s" + idx;
+  const div = document.createElement('div');
+  div.className = 'slide';
+  div.id = 's' + idx;
   div.innerHTML = `
     <div class="slide-inner">
       <div class="section-label">Links</div>
       <div class="slide-title">Links</div>
       <div class="links-list">
-        <a class="link-card" href="https://saa-recovery.org/daily-meditation-from-voices-of-recovery/" target="_blank" rel="noopener">
+        <a class="link-card" href="https://saa-recovery.org/literature/voices-recovery-daily-meditation-book/" target="_blank" rel="noopener">
           <div class="link-card-label">Voices in Recovery</div>
           <div class="link-card-title">Voices of Recovery — Daily Meditation Book</div>
           <div class="link-card-url">saa-recovery.org</div>
@@ -429,8 +600,8 @@ function buildLinksSlide(idx) {
       </div>
     </div>
     <div class="nav-btns">
-      <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?"disabled":""}>← Back</button>
-      <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?"disabled":""}>Next →</button>
+      <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?'disabled':''}>← Back</button>
+      <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?'disabled':''}>Next →</button>
     </div>`;
   return div;
 }
@@ -442,59 +613,60 @@ flat.forEach((slide, idx) => {
   } else if (slide.type === 'links') {
     div = buildLinksSlide(idx);
   } else {
-    div = document.createElement("div");
-    div.className = "slide";
-    div.id = "s" + idx;
-    const pager = slide.total > 1 ? `<div class="page-indicator">${slide.pi + 1} of ${slide.total}</div>` : "";
-    const sub = slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : "";
+    div = document.createElement('div');
+    div.className = 'slide';
+    div.id = 's' + idx;
+    const pager = slide.total > 1 ? `<div class="page-indicator">${slide.pi + 1} of ${slide.total}</div>` : '';
+    const sub = slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : '';
     div.innerHTML = `
       <div class="slide-inner">
-        <div class="section-label">${slide.short.replace("\n"," ")}</div>
+        <div class="section-label">${slide.short.replace('\n',' ')}</div>
         <div class="slide-title">${slide.label}</div>
         ${sub}
         <div class="slide-body">${slide.content}</div>
       </div>
       ${pager}
       <div class="nav-btns">
-        <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?"disabled":""}>← Back</button>
-        <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?"disabled":""}>Next →</button>
+        <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?'disabled':''}>← Back</button>
+        <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?'disabled':''}>Next →</button>
       </div>`;
   }
   slidesEl.appendChild(div);
 });
 
 function showChip(milestone, btn) {
-  // Hide all chips
-  document.querySelectorAll('.chips-image-panel img').forEach(img => {
-    img.classList.remove('visible');
-  });
+  document.querySelectorAll('.chips-image-panel img').forEach(img => img.classList.remove('visible'));
   document.querySelectorAll('.milestone-btn').forEach(b => b.classList.remove('active'));
-
-  // Hide placeholder
-  const placeholder = document.getElementById('chipsPlaceholder');
-  placeholder.classList.add('hidden');
-
-  // Trigger animation by removing and re-adding class
+  document.getElementById('chipsPlaceholder').classList.add('hidden');
   const img = document.getElementById('chip-' + milestone);
-  if (img) {
-    // Force reflow to restart animation
-    void img.offsetWidth;
-    img.classList.add('visible');
-  }
+  if (img) { void img.offsetWidth; img.classList.add('visible'); }
   btn.classList.add('active');
 }
 
 function go(idx) {
   if (idx < 0 || idx >= flat.length) return;
-  document.getElementById("s"+cur).classList.remove("active");
+  document.getElementById('s' + cur).classList.remove('active');
   cur = idx;
-  document.getElementById("s"+cur).classList.add("active");
-  navEl.querySelectorAll(".circle-btn").forEach((btn, si) => {
-    btn.classList.toggle("active", flat[cur].si === si);
-  });
+  document.getElementById('s' + cur).classList.add('active');
+  // Sync nav glow to current section
+  const lis = navList.querySelectorAll('li');
+  const activeLi = lis[flat[cur].si];
+  if (activeLi) activateNavItem(activeLi);
 }
 
-go(0);
+// Init on load
+window.addEventListener('DOMContentLoaded', () => {
+  const firstLi = navList.querySelector('li');
+  firstLi.classList.add('active');
+  document.getElementById('s0').classList.add('active');
+  setTimeout(() => activateNavItem(firstLi), 50);
+});
+
+window.addEventListener('resize', () => {
+  const lis = navList.querySelectorAll('li');
+  const activeLi = lis[flat[cur].si];
+  if (activeLi) activateNavItem(activeLi);
+});
 </script>
 </body>
 </html>
