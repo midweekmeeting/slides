@@ -21,7 +21,7 @@
   }
   .nav-circles {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
     margin-bottom: 1.75rem;
     justify-content: center;
@@ -34,7 +34,7 @@
     border: 1.5px solid #d0d0d0;
     background: #f5f5f5;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 500;
     color: #666;
     display: flex;
@@ -95,7 +95,7 @@
     line-height: 1.8;
   }
   .slide-body p { margin-bottom: 1rem; }
-  .slide-body ol, .slide-body ul { padding-left: 2.2rem; }
+  .slide-body ol, .slide-body ul { padding-left: 1.5rem; }
   .slide-body li { margin-bottom: 0.65rem; line-height: 1.75; }
   .prayer-text {
     font-size: clamp(20px, 2.5vw, 30px);
@@ -133,6 +133,105 @@
   .nav-btn:hover { background: #f5f5f5; }
   .nav-btn:disabled { opacity: 0.2; cursor: default; }
 
+  /* Chips slide */
+  .chips-layout {
+    display: flex;
+    gap: 2rem;
+    flex: 1;
+    overflow: hidden;
+    align-items: center;
+  }
+  .chips-image-panel {
+    flex: 0 0 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .chips-image-panel img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    display: none;
+  }
+  .chips-image-panel img.visible { display: block; }
+  .chips-image-panel .chips-placeholder {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 2px dashed #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-size: 14px;
+    text-align: center;
+    padding: 1rem;
+  }
+  .chips-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow-y: auto;
+  }
+  .chips-controls h2 {
+    font-size: clamp(18px, 2vw, 26px);
+    font-weight: 500;
+    color: #111;
+    margin-bottom: 0.75rem;
+  }
+  .milestone-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 8px;
+  }
+  .milestone-btn {
+    padding: 10px 6px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    transition: all 0.12s;
+    text-align: center;
+  }
+  .milestone-btn:hover { background: #f0f0f0; border-color: #bbb; }
+  .milestone-btn.active { background: #111; color: #fff; border-color: #111; }
+
+  /* Links slide */
+  .links-list { display: flex; flex-direction: column; gap: 1.25rem; }
+  .link-card {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, background 0.15s;
+    display: block;
+  }
+  .link-card:hover { border-color: #bbb; background: #fafafa; }
+  .link-card-label {
+    font-size: clamp(11px, 1.2vw, 13px);
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 0.3rem;
+  }
+  .link-card-title {
+    font-size: clamp(16px, 1.8vw, 22px);
+    font-weight: 500;
+    color: #111;
+    margin-bottom: 0.2rem;
+  }
+  .link-card-url {
+    font-size: clamp(12px, 1.2vw, 14px);
+    color: #888;
+  }
+
   @media (prefers-color-scheme: dark) {
     body { background: #141414; color: #eee; }
     .circle-btn { background: #222; border-color: #444; color: #aaa; }
@@ -147,6 +246,15 @@
     .nav-btns { border-top-color: #2a2a2a; }
     .nav-btn { border-color: #333; color: #eee; }
     .nav-btn:hover { background: #222; }
+    .chips-controls h2 { color: #eee; }
+    .milestone-btn { background: #1e1e1e; border-color: #333; color: #ccc; }
+    .milestone-btn:hover { background: #2a2a2a; border-color: #555; }
+    .milestone-btn.active { background: #eee; color: #111; border-color: #eee; }
+    .chips-placeholder { border-color: #333; color: #555; }
+    .link-card { border-color: #2a2a2a; }
+    .link-card:hover { border-color: #555; background: #1e1e1e; }
+    .link-card-title { color: #eee; }
+    .link-card-url { color: #666; }
   }
 </style>
 </head>
@@ -157,6 +265,8 @@
 </div>
 
 <script>
+const milestones = ['1D','1W','1M','2M','3M','4M','5M','6M','7M','8M','9M','10M','11M','1Y','18M','2Y','3Y','4Y','5Y','6Y','7Y','8Y','9Y','10Y','11Y','12Y','13Y','14Y','15Y'];
+
 const sections = [
   {
     short: "Serenity\nPrayer",
@@ -201,6 +311,34 @@ const sections = [
     ]
   },
   {
+    short: "Abstinence\nStatement",
+    label: "Abstinence Statement",
+    pages: [
+      { content: `<p>Our goal when entering SAA is abstinence from one or more specific sexual behaviors. But unlike programs for recovering alcoholics or drug addicts, Sex Addicts Anonymous does not have a universal definition of abstinence. Most of us have no desire to stop being sexual altogether. It is not sex in and of itself that causes us problems, but the addiction to certain sexual behaviors.</p><p>We are individuals, and our addictive behaviors, while similar, are unique to us. What may be healthy for one member could be clearly addictive for another.</p>` },
+      { content: `<p>We carefully consider which behaviors we feel powerless to stop, and which sexual acts lead to feelings of demoralization or other negative consequences. We also consider which sexual behaviors are acceptable to us, or even experienced with a sense of gratitude and enjoyment.</p><p>We have learned that our ideas of what is healthy and what is addictive evolve with experience. In time, we are able to define our individual abstinence with honesty, fairness, and gentleness.</p>` }
+    ]
+  },
+  {
+    short: "Chips",
+    label: "Chips",
+    type: "chips",
+    pages: [{ content: "" }]
+  },
+  {
+    short: "Links",
+    label: "Links",
+    type: "links",
+    pages: [{ content: "" }]
+  },
+  {
+    short: "Keep\nComing Back",
+    label: "Keep Coming Back",
+    pages: [
+      { content: `<p>We have had to work at staying sexually sober, as well as rebuilding our lives and relationships. Sometimes the steps seemed overwhelming. But we found that we had several things working in our favor. We had time and energy available that we used to waste on our addiction. We had our new friends in recovery. And most importantly, we had the God of our understanding to sustain us.</p><p>Through the program, we were able to face problems that we never had the courage to face before, and to do things we never imagined possible.</p>` },
+      { content: `<p>Each of us has taken steps of courage and leaps of faith. Each of us has contributed, not only to our own recovery, but to the recovery of other suffering sex addicts as well. We have contributed by showing up at meetings and by sharing our experience, strength, and hope.</p><p>We have listened to our fellow addicts and supported them in their recovery journey. Like the first members of our fellowship, we continue to remain sexually sober by helping our fellow addicts stay sober. Our prayer is that every sex addict who seeks recovery will have the opportunity to find it.</p><p style="font-weight:500;font-style:italic;">And keep coming back.</p>` }
+    ]
+  },
+  {
     short: "The\nPromises",
     label: "The Promises",
     pages: [
@@ -214,7 +352,7 @@ const sections = [
 let flat = [];
 sections.forEach((sec, si) => {
   sec.pages.forEach((page, pi) => {
-    flat.push({ si, pi, total: sec.pages.length, short: sec.short, label: sec.label, subtitle: page.subtitle || null, content: page.content });
+    flat.push({ si, pi, total: sec.pages.length, short: sec.short, label: sec.label, subtitle: page.subtitle || null, content: page.content, type: sec.type || 'text' });
   });
 });
 
@@ -230,26 +368,100 @@ sections.forEach((sec, si) => {
   navEl.appendChild(btn);
 });
 
-flat.forEach((slide, idx) => {
+function buildChipsSlide(idx) {
   const div = document.createElement("div");
   div.className = "slide";
   div.id = "s" + idx;
-  const pager = slide.total > 1 ? `<div class="page-indicator">${slide.pi + 1} of ${slide.total}</div>` : "";
-  const sub = slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : "";
   div.innerHTML = `
-    <div class="slide-inner">
-      <div class="section-label">${slide.short.replace("\n"," ")}</div>
-      <div class="slide-title">${slide.label}</div>
-      ${sub}
-      <div class="slide-body">${slide.content}</div>
+    <div class="slide-inner" style="justify-content:flex-start;padding-top:0.5rem;">
+      <div class="section-label">Chips</div>
+      <div class="chips-layout">
+        <div class="chips-image-panel" id="chipsImgPanel">
+          <div class="chips-placeholder" id="chipsPlaceholder">Select a milestone to see the chip</div>
+          ${milestones.map(m => `<img id="chip-${m}" src="chips/${m}.png" alt="${m} chip">`).join('')}
+        </div>
+        <div class="chips-controls">
+          <h2>What milestone are we celebrating?</h2>
+          <div class="milestone-grid">
+            ${milestones.map(m => `<button class="milestone-btn" onclick="showChip('${m}',this)">${m}</button>`).join('')}
+          </div>
+        </div>
+      </div>
     </div>
-    ${pager}
     <div class="nav-btns">
       <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?"disabled":""}>← Back</button>
       <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?"disabled":""}>Next →</button>
     </div>`;
+  return div;
+}
+
+function buildLinksSlide(idx) {
+  const div = document.createElement("div");
+  div.className = "slide";
+  div.id = "s" + idx;
+  div.innerHTML = `
+    <div class="slide-inner">
+      <div class="section-label">Links</div>
+      <div class="slide-title">Links</div>
+      <div class="links-list">
+        <a class="link-card" href="https://saa-recovery.org/literature/voices-recovery-daily-meditation-book/" target="_blank" rel="noopener">
+          <div class="link-card-label">Voices in Recovery</div>
+          <div class="link-card-title">Voices of Recovery — Daily Meditation Book</div>
+          <div class="link-card-url">saa-recovery.org</div>
+        </a>
+        <a class="link-card" href="https://saa-recovery.org/literature/sex-addicts-anonymous-green-book-saas-basic-text/" target="_blank" rel="noopener">
+          <div class="link-card-label">Green Book</div>
+          <div class="link-card-title">Sex Addicts Anonymous — SAA's Basic Text</div>
+          <div class="link-card-url">saa-recovery.org</div>
+        </a>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?"disabled":""}>← Back</button>
+      <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?"disabled":""}>Next →</button>
+    </div>`;
+  return div;
+}
+
+flat.forEach((slide, idx) => {
+  let div;
+  if (slide.type === 'chips') {
+    div = buildChipsSlide(idx);
+  } else if (slide.type === 'links') {
+    div = buildLinksSlide(idx);
+  } else {
+    div = document.createElement("div");
+    div.className = "slide";
+    div.id = "s" + idx;
+    const pager = slide.total > 1 ? `<div class="page-indicator">${slide.pi + 1} of ${slide.total}</div>` : "";
+    const sub = slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : "";
+    div.innerHTML = `
+      <div class="slide-inner">
+        <div class="section-label">${slide.short.replace("\n"," ")}</div>
+        <div class="slide-title">${slide.label}</div>
+        ${sub}
+        <div class="slide-body">${slide.content}</div>
+      </div>
+      ${pager}
+      <div class="nav-btns">
+        <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?"disabled":""}>← Back</button>
+        <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?"disabled":""}>Next →</button>
+      </div>`;
+  }
   slidesEl.appendChild(div);
 });
+
+function showChip(milestone, btn) {
+  document.querySelectorAll('.chips-image-panel img').forEach(img => img.classList.remove('visible'));
+  document.querySelectorAll('.milestone-btn').forEach(b => b.classList.remove('active'));
+  const img = document.getElementById('chip-' + milestone);
+  const placeholder = document.getElementById('chipsPlaceholder');
+  if (img) {
+    img.classList.add('visible');
+    placeholder.style.display = 'none';
+  }
+  btn.classList.add('active');
+}
 
 function go(idx) {
   if (idx < 0 || idx >= flat.length) return;
