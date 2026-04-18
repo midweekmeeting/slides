@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wednesday Meeting</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #fff;
+    color: #111;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  .shell {
+    width: 100%;
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    min-height: 520px;
+  }
+  .nav-circles {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    justify-content: center;
+  }
+  .circle-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid #d0d0d0;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: 500;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.2;
+    padding: 4px;
+    transition: all 0.15s;
+    white-space: pre;
+  }
+  .circle-btn:hover { border-color: #999; color: #111; }
+  .circle-btn.active { background: #111; color: #fff; border-color: #111; }
+  .slide { display: none; flex: 1; flex-direction: column; }
+  .slide.active { display: flex; }
+  .slide-inner { flex: 1; padding-bottom: 1.5rem; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 0.5rem;
+  }
+  .slide-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: #111;
+    margin-bottom: 1.25rem;
+    line-height: 1.3;
+  }
+  .slide-subtitle {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+  .slide-body {
+    font-size: 16px;
+    color: #222;
+    line-height: 1.8;
+  }
+  .slide-body p { margin-bottom: 1rem; }
+  .slide-body ol, .slide-body ul { padding-left: 1.4rem; }
+  .slide-body li { margin-bottom: 0.65rem; line-height: 1.75; }
+  .prayer-text {
+    font-size: 18px;
+    line-height: 2.2;
+    color: #111;
+    text-align: center;
+    padding: 1.5rem 0;
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  .page-indicator {
+    font-size: 12px;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+  .nav-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+  }
+  .nav-btn {
+    background: transparent;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #111;
+    transition: background 0.1s;
+  }
+  .nav-btn:hover { background: #f5f5f5; }
+  .nav-btn:disabled { opacity: 0.2; cursor: default; }
+
+  @media (prefers-color-scheme: dark) {
+    body { background: #141414; color: #eee; }
+    .circle-btn { background: #222; border-color: #444; color: #aaa; }
+    .circle-btn:hover { border-color: #888; color: #eee; }
+    .circle-btn.active { background: #eee; color: #111; border-color: #eee; }
+    .slide-title { color: #eee; }
+    .section-label { color: #666; }
+    .slide-subtitle { color: #777; }
+    .slide-body { color: #ccc; }
+    .prayer-text { color: #eee; }
+    .page-indicator { color: #555; }
+    .nav-btns { border-top-color: #2a2a2a; }
+    .nav-btn { border-color: #333; color: #eee; }
+    .nav-btn:hover { background: #222; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="nav-circles" id="navCircles"></div>
+  <div id="slides"></div>
+</div>
+
+<script>
+const sections = [
+  {
+    short: "Serenity\nPrayer",
+    label: "The Serenity Prayer",
+    pages: [
+      {
+        content: `<p class="prayer-text">God, grant me the<br>Serenity to accept the things I cannot change,<br>Courage to change the things I can,<br>and Wisdom to know the difference.</p>`
+      }
+    ]
+  },
+  {
+    short: "Letter to\nNewcomers",
+    label: "A Letter to Newcomers",
+    pages: [
+      {
+        content: `<p>For any newcomers with us for their first meeting, welcome! We acknowledge you for the courage it took to get here. At the end there will be a time for you to ask questions and get contact information from others to support you in your recovery.</p><p>It is suggested that you attend six meetings before deciding if SAA is for you. Please know you are welcome here and do keep coming back. You have found a safe place in which to heal yourself from harmful sexual behaviours.</p>`
+      },
+      {
+        content: `<p>Recovery meetings offer an accepting, non-judgmental environment where we can share our common struggles and learn how to apply some simple principles in our everyday lives.</p><p>The only requirement for membership is a desire to stop addictive sexual behaviours. There are no application forms or registration fees. We practise strict anonymity and confidentiality, so that our meetings are a safe place for all of us. Whoever we meet and whatever is said in a meeting is confidential and should not be disclosed to anyone else.</p>`
+      }
+    ]
+  },
+  {
+    short: "Message\nof Hope",
+    label: "A Message of Hope",
+    pages: [
+      {
+        subtitle: "For sex addicts in the LGBT communities — adapted from SAA literature",
+        content: `<p>Sex Addicts Anonymous is a spiritual program based on the principles and traditions of Alcoholics Anonymous. We are grateful to A.A. for this gift which makes our recovery possible.</p><p>Our primary purpose is to stop our addictive sexual behaviour and to help others recover from sexual addiction. We find a new way of living through the SAA program and carry our message to others seeking recovery. Membership is open to all who have a desire to stop addictive sexual behaviour. There is no other requirement.</p>`
+      },
+      {
+        subtitle: "For sex addicts in the LGBT communities — adapted from SAA literature",
+        content: `<p>Our fellowship is open to anyone regardless of age, race, religion, ethnic background, marital status, or occupation. We welcome members of any sexual orientation or gender.</p><p>Many of our sexual behaviours produced negative consequences. These behaviours are not gender specific and may cross lines of sexual orientation.</p>`
+      },
+      {
+        subtitle: "For sex addicts in the LGBT communities — adapted from SAA literature",
+        content: `<p>For many of us, the spiral of sexual addiction led to what we called "hitting rock bottom" — to reach such a low point mentally, physically, emotionally, and spiritually that we break through our denial.</p><p>We now use our sense of surrender in a healthy manner. Previously we surrendered to the destructive addictive sexual behaviours that caused great damage in our lives. Now we start to surrender and become teachable, to a healthier way of life filled with hope, growth, and change.</p>`
+      }
+    ]
+  },
+  {
+    short: "12\nSteps",
+    label: "The Twelve Steps of SAA",
+    pages: [
+      {
+        subtitle: "Sex Addicts Anonymous, p. 20–21",
+        content: `<ol start="1"><li>We admitted we were powerless over addictive sexual behaviour — that our lives had become unmanageable.</li><li>Came to believe that a Power greater than ourselves could restore us to sanity.</li><li>Made a decision to turn our will and our lives over to the care of God as we understood God.</li><li>Made a searching and fearless moral inventory of ourselves.</li></ol>`
+      },
+      {
+        subtitle: "Sex Addicts Anonymous, p. 20–21",
+        content: `<ol start="5"><li>Admitted to God, to ourselves, and to another human being the exact nature of our wrongs.</li><li>Were entirely ready to have God remove all these defects of character.</li><li>Humbly asked God to remove our shortcomings.</li><li>Made a list of all persons we had harmed and became willing to make amends to them all.</li></ol>`
+      },
+      {
+        subtitle: "Sex Addicts Anonymous, p. 20–21",
+        content: `<ol start="9"><li>Made direct amends to such people wherever possible, except when to do so would injure them or others.</li><li>Continued to take personal inventory and when we were wrong promptly admitted it.</li><li>Sought through prayer and meditation to improve our conscious contact with God as we understood God, praying only for knowledge of God's will for us and the power to carry that out.</li><li>Having had a spiritual awakening as the result of these steps, we tried to carry this message to other sex addicts and to practise these principles in our lives.</li></ol>`
+      }
+    ]
+  },
+  {
+    short: "12\nTraditions",
+    label: "The Twelve Traditions of SAA",
+    pages: [
+      {
+        subtitle: "Sex Addicts Anonymous, p. 77",
+        content: `<ol start="1"><li>Our common welfare should come first; personal recovery depends upon SAA unity.</li><li>For our group purpose there is but one ultimate authority — a loving God as expressed in our group conscience. Our leaders are but trusted servants; they do not govern.</li><li>The only requirement for SAA membership is a desire to stop addictive sexual behaviour.</li><li>Each group should be autonomous except in matters affecting other groups or SAA as a whole.</li></ol>`
+      },
+      {
+        subtitle: "Sex Addicts Anonymous, p. 77",
+        content: `<ol start="5"><li>Each group has but one primary purpose — to carry its message to the sex addict who still suffers.</li><li>An SAA group ought never endorse, finance, or lend the SAA name to any related facility or outside enterprise, lest problems of money, property, and prestige divert us from our primary purpose.</li><li>Every SAA group ought to be fully self-supporting.</li><li>SAA should remain forever nonprofessional, but our service centres may employ special workers.</li></ol>`
+      },
+      {
+        subtitle: "Sex Addicts Anonymous, p. 77",
+        content: `<ol start="9"><li>SAA, as such, ought never be organised; but we may create service boards or committees directly responsible to those they serve.</li><li>SAA has no opinion on outside issues; hence the SAA name ought never be drawn into public controversy.</li><li>Our public relations policy is based on attraction rather than promotion; we need always maintain personal anonymity at the level of press, radio, TV, and films.</li><li>Anonymity is the spiritual foundation of all our traditions, ever reminding us to place principles before personalities.</li></ol>`
+      }
+    ]
+  },
+  {
+    short: "The\nPromises",
+    label: "The Promises",
+    pages: [
+      {
+        subtitle: "Alcoholics Anonymous, p. 83–84",
+        content: `<p>If we are painstaking about this phase of our development, we will be amazed before we are half way through.</p><ul><li>We are going to know a new freedom and a new happiness.</li><li>We will not regret the past nor wish to shut the door on it.</li><li>We will comprehend the word serenity and we will know peace.</li><li>No matter how far down the scale we have gone, we will see how our experience can benefit others.</li><li>That feeling of uselessness and self-pity will disappear.</li></ul>`
+      },
+      {
+        subtitle: "Alcoholics Anonymous, p. 83–84",
+        content: `<ul><li>We will lose interest in selfish things and gain interest in our fellows.</li><li>Self-seeking will slip away.</li><li>Our whole attitude and outlook upon life will change.</li><li>Fear of people and of economic insecurity will leave us.</li><li>We will intuitively know how to handle situations which used to baffle us.</li><li>We will suddenly realise that God is doing for us what we could not do for ourselves.</li></ul>`
+      },
+      {
+        subtitle: "Alcoholics Anonymous, p. 83–84",
+        content: `<p>Are these extravagant promises? We think not.</p><p>They are being fulfilled among us — sometimes quickly, sometimes slowly. They will always materialise if we work for them.</p>`
+      }
+    ]
+  }
+];
+
+let flat = [];
+sections.forEach((sec, si) => {
+  sec.pages.forEach((page, pi) => {
+    flat.push({ si, pi, total: sec.pages.length, short: sec.short, label: sec.label, subtitle: page.subtitle || null, content: page.content });
+  });
+});
+
+let cur = 0;
+const navEl = document.getElementById("navCircles");
+const slidesEl = document.getElementById("slides");
+
+sections.forEach((sec, si) => {
+  const btn = document.createElement("button");
+  btn.className = "circle-btn";
+  btn.textContent = sec.short;
+  btn.onclick = () => go(flat.findIndex(s => s.si === si));
+  navEl.appendChild(btn);
+});
+
+flat.forEach((slide, idx) => {
+  const div = document.createElement("div");
+  div.className = "slide";
+  div.id = "s" + idx;
+  const pager = slide.total > 1 ? `<div class="page-indicator">${slide.pi + 1} of ${slide.total}</div>` : "";
+  const sub = slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : "";
+  div.innerHTML = `
+    <div class="slide-inner">
+      <div class="section-label">${slide.short.replace("\n", " ")}</div>
+      <div class="slide-title">${slide.label}</div>
+      ${sub}
+      <div class="slide-body">${slide.content}</div>
+    </div>
+    ${pager}
+    <div class="nav-btns">
+      <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?"disabled":""}>← Back</button>
+      <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?"disabled":""}>Next →</button>
+    </div>`;
+  slidesEl.appendChild(div);
+});
+
+function go(idx) {
+  if (idx < 0 || idx >= flat.length) return;
+  document.getElementById("s" + cur).classList.remove("active");
+  cur = idx;
+  document.getElementById("s" + cur).classList.add("active");
+  navEl.querySelectorAll(".circle-btn").forEach((btn, si) => {
+    btn.classList.toggle("active", flat[cur].si === si);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+go(0);
+</script>
+</body>
+</html>
