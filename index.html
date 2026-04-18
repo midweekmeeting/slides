@@ -22,7 +22,7 @@
     padding: 1.5rem 2.5rem;
   }
 
-  /* ── Glowing pill nav ── */
+  /* ── CSS custom properties for animation ── */
   @layer properties {
     @property --after-bg-position        { syntax:'<number>'; inherits:true; initial-value:0; }
     @property --after-radial-bg-position { syntax:'<number>'; inherits:true; initial-value:0; }
@@ -38,8 +38,11 @@
     --trs-easing: cubic-bezier(.41,-0.09,.55,1.09);
     --trs-timing: 300ms;
     --trs-delay: 80ms;
+    --active-color: #fff;
+    --active-color-dim: rgba(255,255,255,0.25);
   }
 
+  /* ── Nav ── */
   .nav {
     transition:
       --after-bg-position var(--trs-timing) var(--trs-easing) .2s,
@@ -54,18 +57,20 @@
     margin-bottom: 1.5rem;
   }
 
+  /* Outer glow — uses active-color */
   .nav::before {
     content: '';
     display: block;
     position: absolute;
     width: calc(calc(var(--after-bg-width) * 1px) - 8px);
     height: 100%;
-    background: rgb(255 255 255 / calc(var(--after-shadow-offset)*1%));
+    background: var(--active-color-dim);
     border-radius: 100px;
-    filter: blur(20px);
+    filter: blur(22px);
     left: 0;
     top: 0;
-    transform: translateX(calc(var(--after-bg-position) * 1px)) scale(1.1);
+    transform: translateX(calc(var(--after-bg-position) * 1px)) scale(1.15);
+    transition: background 0.4s ease;
   }
 
   .nav ul {
@@ -77,14 +82,15 @@
     justify-content: space-between;
     height: 56px;
     border-radius: 100px;
-    background-image: radial-gradient(
-      ellipse 150px 100px
-      at calc(var(--after-radial-bg-position)*1px) bottom,
-      rgba(255,255,255,1) 0%,
-      rgba(255,255,255,20%) 100%
+    /* Rainbow border via conic-gradient */
+    background-image: conic-gradient(
+      from 0deg,
+      #e40303, #ff8c00, #ffed00, #008026, #004dff, #750787, #e40303
     );
+    background-origin: border-box;
   }
 
+  /* Inner dark fill — leaves 1px rainbow border visible */
   .nav ul::before {
     content: '';
     display: block;
@@ -95,8 +101,10 @@
     top: 1px;
     left: 1px;
     border-radius: 100px;
+    z-index: 0;
   }
 
+  /* Sliding highlight pill */
   .nav ul::after {
     content: '';
     display: block;
@@ -104,22 +112,24 @@
     z-index: 1;
     width: calc(calc(var(--after-bg-width) * 1px) - 12px);
     height: calc(100% - 12px);
-    background: linear-gradient(to bottom, rgb(255 255 255 / calc(calc(var(--after-bg-opacity,0)/10)*1%)), rgb(255 255 255 / 10%));
-    box-shadow: inset 0 -6px calc(var(--after-shadow-offset,0)*1px) rgb(255 255 255 / calc(var(--after-bg-opacity)*1%));
+    background: linear-gradient(to bottom, var(--active-color-dim), rgba(255,255,255,0.06));
+    box-shadow: inset 0 -6px 12px var(--active-color-dim);
     left: 6px;
     top: 6px;
     transform: translate(calc(var(--after-bg-position) * 1px), 0);
+    /* default: first item — pill left, squared right */
     border-radius: 100px 12px 12px 100px;
     transition:
-      --after-bg-opacity var(--trs-timing) var(--trs-easing) var(--trs-delay),
-      --after-shadow-offset var(--trs-timing) var(--trs-easing) var(--trs-delay),
+      background 0.4s ease,
+      box-shadow 0.4s ease,
       border-radius var(--trs-timing) var(--trs-easing) var(--trs-delay);
     pointer-events: none;
   }
 
-  .nav ul:has(li.active:first-of-type a)::after  { border-radius: 100px 12px 12px 100px; }
-  .nav ul:has(li.active:last-of-type a)::after   { border-radius: 12px 100px 100px 12px; }
-  .nav ul:has(li.active:nth-child(n+2):nth-child(-n+8) a)::after { border-radius: 100px; }
+  /* Border-radius states driven by JS data attribute */
+  .nav[data-pos="first"]  ul::after { border-radius: 100px 12px 12px 100px; }
+  .nav[data-pos="middle"] ul::after { border-radius: 12px; }
+  .nav[data-pos="last"]   ul::after { border-radius: 12px 100px 100px 12px; }
 
   .nav ul li {
     padding: 0.6em 0.5em;
@@ -128,6 +138,7 @@
     position: relative;
     transform-style: preserve-3d;
     perspective: 800px;
+    z-index: 2;
   }
 
   .nav ul li:not(.active):hover { --li-before-opacity: 0.3; }
@@ -146,7 +157,7 @@
     user-select: none;
     background: linear-gradient(to bottom, rgb(255 255 255 / 5%), rgb(255 255 255 / 35%));
     opacity: var(--li-before-opacity);
-    transform: scale(var(--after-scale)) rotateY(calc(var(--tilt-bg-y) * 3 * -1deg)) rotateX(calc(var(--tilt-bg-x) * 3 * 1deg)) translateZ(15px);
+    transform: scale(var(--after-scale)) rotateY(calc(var(--tilt-bg-y, 0) * 3 * -1deg)) rotateX(calc(var(--tilt-bg-x, 0) * 3 * 1deg)) translateZ(15px);
     transition:
       --li-before-opacity var(--trs-timing) var(--trs-easing),
       --after-scale calc(var(--trs-timing)/2) var(--trs-easing) calc(var(--trs-delay)/2);
@@ -164,7 +175,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: rgb(255 255 255 / 55%);
+    color: rgb(255 255 255 / 45%);
     font-size: clamp(8px, 1vw, 11px);
     font-weight: 500;
     font-family: inherit;
@@ -177,17 +188,11 @@
     padding: 0;
   }
 
-  .nav ul li.active button { color: rgb(255 255 255 / 95%); }
-  .nav ul li:not(.active):hover button { color: rgb(255 255 255 / 75%); }
+  .nav ul li.active button { color: #fff; }
+  .nav ul li:not(.active):hover button { color: rgb(255 255 255 / 70%); }
 
   /* ── Slides ── */
-  .slides-wrap {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
+  .slides-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
   .slide { display: none; flex: 1; flex-direction: column; overflow: hidden; }
   .slide.active { display: flex; }
 
@@ -264,27 +269,21 @@
 
   .nav-btn {
     background: transparent;
-    border: 1px solid rgb(255 255 255 / 15%);
+    border: 1px solid var(--active-color-dim);
     border-radius: 8px;
     padding: 10px 28px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
-    color: rgb(255 255 255 / 70%);
-    transition: background 0.1s, color 0.1s;
+    color: var(--active-color);
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 
-  .nav-btn:hover { background: rgb(255 255 255 / 8%); color: #fff; }
+  .nav-btn:hover { background: var(--active-color-dim); }
   .nav-btn:disabled { opacity: 0.2; cursor: default; }
 
   /* ── Chips ── */
-  .chips-layout {
-    display: flex;
-    gap: 2rem;
-    flex: 1;
-    overflow: hidden;
-    align-items: center;
-  }
+  .chips-layout { display: flex; gap: 2rem; flex: 1; overflow: hidden; align-items: center; }
 
   .chips-image-panel {
     flex: 0 0 40%;
@@ -303,7 +302,6 @@
     opacity: 0;
     transform: scale(0.6) rotate(-8deg);
     pointer-events: none;
-    transition: none;
   }
 
   @keyframes chipPop {
@@ -318,42 +316,18 @@
   }
 
   .chips-placeholder {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
+    width: 200px; height: 200px; border-radius: 50%;
     border: 2px dashed rgb(255 255 255 / 15%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgb(255 255 255 / 25%);
-    font-size: 14px;
-    text-align: center;
-    padding: 1rem;
-    transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    color: rgb(255 255 255 / 25%); font-size: 14px;
+    text-align: center; padding: 1rem; transition: opacity 0.2s;
   }
-
   .chips-placeholder.hidden { opacity: 0; }
 
-  .chips-controls {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    overflow-y: auto;
-  }
+  .chips-controls { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; }
+  .chips-controls h2 { font-size: clamp(18px, 2vw, 26px); font-weight: 500; color: #fff; margin-bottom: 0.75rem; }
 
-  .chips-controls h2 {
-    font-size: clamp(18px, 2vw, 26px);
-    font-weight: 500;
-    color: #fff;
-    margin-bottom: 0.75rem;
-  }
-
-  .milestone-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-    gap: 8px;
-  }
+  .milestone-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; }
 
   .milestone-btn {
     padding: 10px 6px;
@@ -361,60 +335,51 @@
     border-radius: 8px;
     background: rgb(255 255 255 / 5%);
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 14px; font-weight: 500;
     color: rgb(255 255 255 / 65%);
     transition: all 0.12s;
-    text-align: center;
-    font-family: inherit;
+    text-align: center; font-family: inherit;
   }
-
   .milestone-btn:hover { background: rgb(255 255 255 / 10%); border-color: rgb(255 255 255 / 25%); color: #fff; }
-  .milestone-btn.active { background: rgb(255 255 255 / 18%); color: #fff; border-color: rgb(255 255 255 / 40%); }
+  .milestone-btn.active { background: rgb(255 255 255 / 15%); color: #fff; border-color: rgb(255 255 255 / 40%); }
 
   /* ── Links ── */
   .links-list { display: flex; flex-direction: column; gap: 1.25rem; }
-
   .link-card {
     border: 1px solid rgb(255 255 255 / 10%);
-    border-radius: 10px;
-    padding: 1.25rem 1.5rem;
-    text-decoration: none;
-    color: inherit;
-    transition: border-color 0.15s, background 0.15s;
-    display: block;
+    border-radius: 10px; padding: 1.25rem 1.5rem;
+    text-decoration: none; color: inherit;
+    transition: border-color 0.15s, background 0.15s; display: block;
   }
-
   .link-card:hover { border-color: rgb(255 255 255 / 25%); background: rgb(255 255 255 / 5%); }
-
-  .link-card-label {
-    font-size: clamp(11px, 1.2vw, 13px);
-    font-weight: 500;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: rgb(255 255 255 / 35%);
-    margin-bottom: 0.3rem;
-  }
-
-  .link-card-title {
-    font-size: clamp(16px, 1.8vw, 22px);
-    font-weight: 500;
-    color: #fff;
-    margin-bottom: 0.2rem;
-  }
-
-  .link-card-url { font-size: clamp(12px, 1.2vw, 14px); color: rgb(255 255 255 / 35%); }
+  .link-card-label { font-size: clamp(11px,1.2vw,13px); font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgb(255 255 255 / 35%); margin-bottom: 0.3rem; }
+  .link-card-title { font-size: clamp(16px,1.8vw,22px); font-weight: 500; color: #fff; margin-bottom: 0.2rem; }
+  .link-card-url { font-size: clamp(12px,1.2vw,14px); color: rgb(255 255 255 / 35%); }
 </style>
 </head>
 <body>
 <div class="shell">
-  <nav class="nav" id="mainNav">
+  <nav class="nav" id="mainNav" data-pos="first">
     <ul id="navList"></ul>
   </nav>
   <div class="slides-wrap" id="slides"></div>
 </div>
 
 <script>
+// Rainbow colors — one per section (9 sections)
+const sectionColors = [
+  { color: '#e40303', dim: 'rgba(228,3,3,0.28)' },    // 0 Serenity Prayer — red
+  { color: '#ff8c00', dim: 'rgba(255,140,0,0.28)' },   // 1 Letter — orange
+  { color: '#ffed00', dim: 'rgba(255,237,0,0.28)' },   // 2 Message of Hope — yellow
+  { color: '#008026', dim: 'rgba(0,128,38,0.28)' },    // 3 12 Steps — green
+  { color: '#004dff', dim: 'rgba(0,77,255,0.28)' },    // 4 12 Traditions — blue
+  { color: '#c77dff', dim: 'rgba(199,125,255,0.28)' }, // 5 Abstinence — lavender
+  { color: '#ff61a6', dim: 'rgba(255,97,166,0.28)' },  // 6 Chips — pink
+  { color: '#00c8ff', dim: 'rgba(0,200,255,0.28)' },   // 7 Links — cyan
+  { color: '#750787', dim: 'rgba(117,7,135,0.28)' },   // 8 Keep Coming Back — violet
+  { color: '#e40303', dim: 'rgba(228,3,3,0.28)' },     // 9 Promises — red (cycle)
+];
+
 const milestones = ['1D','1W','1M','2M','3M','4M','5M','6M','7M','8M','9M','10M','11M','1Y','18M','2Y','3Y','4Y','5Y','6Y','7Y','8Y','9Y','10Y','11Y','12Y','13Y','14Y','15Y'];
 
 const sections = [
@@ -493,7 +458,7 @@ const sections = [
     label: "The Promises",
     pages: [
       { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<p>If we are painstaking about this phase of our development, we will be amazed before we are half way through.</p><ul><li>We are going to know a new freedom and a new happiness.</li><li>We will not regret the past nor wish to shut the door on it.</li><li>We will comprehend the word serenity and we will know peace.</li><li>No matter how far down the scale we have gone, we will see how our experience can benefit others.</li><li>That feeling of uselessness and self-pity will disappear.</li></ul>` },
-      { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<ul><li>We will lose interest in selfish things and gain interest in our fellows.</li><li>We will lose interest in selfish things and gain interest in our fellows.</li><li>Self-seeking will slip away.</li><li>Our whole attitude and outlook upon life will change.</li><li>Fear of people and of economic insecurity will leave us.</li><li>We will intuitively know how to handle situations which used to baffle us.</li><li>We will suddenly realise that God is doing for us what we could not do for ourselves.</li></ul>` },
+      { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<ul><li>We will lose interest in selfish things and gain interest in our fellows.</li><li>Self-seeking will slip away.</li><li>Our whole attitude and outlook upon life will change.</li><li>Fear of people and of economic insecurity will leave us.</li><li>We will intuitively know how to handle situations which used to baffle us.</li><li>We will suddenly realise that God is doing for us what we could not do for ourselves.</li></ul>` },
       { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<p>Are these extravagant promises? We think not.</p><p>They are being fulfilled among us — sometimes quickly, sometimes slowly. They will always materialise if we work for them.</p>` }
     ]
   }
@@ -502,7 +467,7 @@ const sections = [
 let flat = [];
 sections.forEach((sec, si) => {
   sec.pages.forEach((page, pi) => {
-    flat.push({ si, pi, total: sec.pages.length, short: sec.short, label: sec.label, subtitle: page.subtitle || null, content: page.content, type: sec.type || 'text' });
+    flat.push({ si, pi, total: sec.pages.length, short: sec.short, label: sec.label, subtitle: page.subtitle||null, content: page.content, type: sec.type||'text' });
   });
 });
 
@@ -510,8 +475,9 @@ let cur = 0;
 const nav = document.getElementById('mainNav');
 const navList = document.getElementById('navList');
 const slidesEl = document.getElementById('slides');
+const totalSections = sections.length;
 
-// Build nav items
+// Build nav
 sections.forEach((sec, si) => {
   const li = document.createElement('li');
   const btn = document.createElement('button');
@@ -519,54 +485,62 @@ sections.forEach((sec, si) => {
   btn.onclick = () => {
     const targetIdx = flat.findIndex(s => s.si === si);
     go(targetIdx);
-    activateNavItem(li, btn);
   };
   btn.addEventListener('mousemove', (e) => {
-    const tilt = inverseMousePosition(btn, e);
-    nav.style.setProperty('--tilt-bg-y', tilt.x1 * 2);
-    nav.style.setProperty('--tilt-bg-x', tilt.y1 * 2);
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    nav.style.setProperty('--tilt-bg-y', (-(x - rect.width/2)/20) * 2);
+    nav.style.setProperty('--tilt-bg-x', (-(y - rect.height/2)/20) * 2);
   });
   li.appendChild(btn);
   navList.appendChild(li);
 });
 
-function activateNavItem(li, btn) {
-  navList.querySelectorAll('li').forEach(l => l.classList.remove('active'));
+function setActiveColor(si) {
+  const c = sectionColors[si] || sectionColors[0];
+  document.documentElement.style.setProperty('--active-color', c.color);
+  document.documentElement.style.setProperty('--active-color-dim', c.dim);
+}
+
+function activateNavItem(si) {
+  const lis = navList.querySelectorAll('li');
+  lis.forEach(l => l.classList.remove('active'));
+  const li = lis[si];
+  if (!li) return;
   li.classList.add('active');
+
+  // Set position attribute for border-radius
+  if (si === 0) nav.setAttribute('data-pos', 'first');
+  else if (si === totalSections - 1) nav.setAttribute('data-pos', 'last');
+  else nav.setAttribute('data-pos', 'middle');
+
+  // Slide the glow
   const width = li.offsetWidth;
   const offsetLeft = li.getBoundingClientRect().left - nav.getBoundingClientRect().left;
   nav.style.setProperty('--after-bg-position', offsetLeft);
   nav.style.setProperty('--after-radial-bg-position', offsetLeft + width / 2);
   nav.style.setProperty('--after-bg-width', width);
-}
 
-function inverseMousePosition(element, event) {
-  const rect = element.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  return {
-    x1: -(x - rect.width / 2) / 20,
-    y1: -(y - rect.height / 2) / 20,
-  };
+  setActiveColor(si);
 }
 
 // Build slides
 function buildChipsSlide(idx) {
   const div = document.createElement('div');
-  div.className = 'slide';
-  div.id = 's' + idx;
+  div.className = 'slide'; div.id = 's' + idx;
   div.innerHTML = `
     <div class="slide-inner" style="justify-content:flex-start;padding-top:0.5rem;">
       <div class="section-label">Chips</div>
       <div class="chips-layout">
         <div class="chips-image-panel" id="chipsImgPanel">
           <div class="chips-placeholder" id="chipsPlaceholder">Select a milestone to reveal the chip</div>
-          ${milestones.map(m => `<img id="chip-${m}" src="chips/${m}.png" alt="${m} chip">`).join('')}
+          ${milestones.map(m=>`<img id="chip-${m}" src="chips/${m}.png" alt="${m} chip">`).join('')}
         </div>
         <div class="chips-controls">
           <h2>What milestone are we celebrating?</h2>
           <div class="milestone-grid">
-            ${milestones.map(m => `<button class="milestone-btn" onclick="showChip('${m}',this)">${m}</button>`).join('')}
+            ${milestones.map(m=>`<button class="milestone-btn" onclick="showChip('${m}',this)">${m}</button>`).join('')}
           </div>
         </div>
       </div>
@@ -580,8 +554,7 @@ function buildChipsSlide(idx) {
 
 function buildLinksSlide(idx) {
   const div = document.createElement('div');
-  div.className = 'slide';
-  div.id = 's' + idx;
+  div.className = 'slide'; div.id = 's' + idx;
   div.innerHTML = `
     <div class="slide-inner">
       <div class="section-label">Links</div>
@@ -608,15 +581,12 @@ function buildLinksSlide(idx) {
 
 flat.forEach((slide, idx) => {
   let div;
-  if (slide.type === 'chips') {
-    div = buildChipsSlide(idx);
-  } else if (slide.type === 'links') {
-    div = buildLinksSlide(idx);
-  } else {
+  if (slide.type === 'chips') { div = buildChipsSlide(idx); }
+  else if (slide.type === 'links') { div = buildLinksSlide(idx); }
+  else {
     div = document.createElement('div');
-    div.className = 'slide';
-    div.id = 's' + idx;
-    const pager = slide.total > 1 ? `<div class="page-indicator">${slide.pi + 1} of ${slide.total}</div>` : '';
+    div.className = 'slide'; div.id = 's' + idx;
+    const pager = slide.total > 1 ? `<div class="page-indicator">${slide.pi+1} of ${slide.total}</div>` : '';
     const sub = slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : '';
     div.innerHTML = `
       <div class="slide-inner">
@@ -645,28 +615,18 @@ function showChip(milestone, btn) {
 
 function go(idx) {
   if (idx < 0 || idx >= flat.length) return;
-  document.getElementById('s' + cur).classList.remove('active');
+  document.getElementById('s'+cur).classList.remove('active');
   cur = idx;
-  document.getElementById('s' + cur).classList.add('active');
-  // Sync nav glow to current section
-  const lis = navList.querySelectorAll('li');
-  const activeLi = lis[flat[cur].si];
-  if (activeLi) activateNavItem(activeLi);
+  document.getElementById('s'+cur).classList.add('active');
+  activateNavItem(flat[cur].si);
 }
 
-// Init on load
 window.addEventListener('DOMContentLoaded', () => {
-  const firstLi = navList.querySelector('li');
-  firstLi.classList.add('active');
   document.getElementById('s0').classList.add('active');
-  setTimeout(() => activateNavItem(firstLi), 50);
+  setTimeout(() => activateNavItem(0), 50);
 });
 
-window.addEventListener('resize', () => {
-  const lis = navList.querySelectorAll('li');
-  const activeLi = lis[flat[cur].si];
-  if (activeLi) activateNavItem(activeLi);
-});
+window.addEventListener('resize', () => activateNavItem(flat[cur].si));
 </script>
 </body>
 </html>
