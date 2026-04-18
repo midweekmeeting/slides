@@ -147,17 +147,30 @@
     align-items: center;
     justify-content: center;
     height: 100%;
+    position: relative;
   }
   .chips-image-panel img {
     max-height: 100%;
     max-width: 100%;
     object-fit: contain;
-    display: none;
+    position: absolute;
+    opacity: 0;
+    transform: scale(0.6) rotate(-8deg);
+    pointer-events: none;
+    transition: none;
   }
-  .chips-image-panel img.visible { display: block; }
-  .chips-image-panel .chips-placeholder {
-    width: 220px;
-    height: 220px;
+  @keyframes chipPop {
+    0%   { opacity: 0; transform: scale(0.5) rotate(-12deg); }
+    55%  { opacity: 1; transform: scale(1.08) rotate(3deg); }
+    75%  { transform: scale(0.96) rotate(-1deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  .chips-image-panel img.visible {
+    animation: chipPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .chips-placeholder {
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
     border: 2px dashed #ddd;
     display: flex;
@@ -167,7 +180,9 @@
     font-size: 14px;
     text-align: center;
     padding: 1rem;
+    transition: opacity 0.2s;
   }
+  .chips-placeholder.hidden { opacity: 0; }
   .chips-controls {
     flex: 1;
     display: flex;
@@ -227,10 +242,7 @@
     color: #111;
     margin-bottom: 0.2rem;
   }
-  .link-card-url {
-    font-size: clamp(12px, 1.2vw, 14px);
-    color: #888;
-  }
+  .link-card-url { font-size: clamp(12px, 1.2vw, 14px); color: #888; }
 
   @media (prefers-color-scheme: dark) {
     body { background: #141414; color: #eee; }
@@ -377,7 +389,7 @@ function buildChipsSlide(idx) {
       <div class="section-label">Chips</div>
       <div class="chips-layout">
         <div class="chips-image-panel" id="chipsImgPanel">
-          <div class="chips-placeholder" id="chipsPlaceholder">Select a milestone to see the chip</div>
+          <div class="chips-placeholder" id="chipsPlaceholder">Select a milestone to reveal the chip</div>
           ${milestones.map(m => `<img id="chip-${m}" src="chips/${m}.png" alt="${m} chip">`).join('')}
         </div>
         <div class="chips-controls">
@@ -404,7 +416,7 @@ function buildLinksSlide(idx) {
       <div class="section-label">Links</div>
       <div class="slide-title">Links</div>
       <div class="links-list">
-        <a class="link-card" href="https://saa-recovery.org/daily-meditation-from-voices-of-recovery/" target="_blank" rel="noopener">
+        <a class="link-card" href="https://saa-recovery.org/literature/voices-recovery-daily-meditation-book/" target="_blank" rel="noopener">
           <div class="link-card-label">Voices in Recovery</div>
           <div class="link-card-title">Voices of Recovery — Daily Meditation Book</div>
           <div class="link-card-url">saa-recovery.org</div>
@@ -452,13 +464,22 @@ flat.forEach((slide, idx) => {
 });
 
 function showChip(milestone, btn) {
-  document.querySelectorAll('.chips-image-panel img').forEach(img => img.classList.remove('visible'));
+  // Hide all chips
+  document.querySelectorAll('.chips-image-panel img').forEach(img => {
+    img.classList.remove('visible');
+  });
   document.querySelectorAll('.milestone-btn').forEach(b => b.classList.remove('active'));
-  const img = document.getElementById('chip-' + milestone);
+
+  // Hide placeholder
   const placeholder = document.getElementById('chipsPlaceholder');
+  placeholder.classList.add('hidden');
+
+  // Trigger animation by removing and re-adding class
+  const img = document.getElementById('chip-' + milestone);
   if (img) {
+    // Force reflow to restart animation
+    void img.offsetWidth;
     img.classList.add('visible');
-    placeholder.style.display = 'none';
   }
   btn.classList.add('active');
 }
