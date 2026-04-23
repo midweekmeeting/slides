@@ -61,7 +61,7 @@
     margin-bottom: 1.5rem;
   }
 
-  /* Outer glow — uses active-color */
+  /* Outer glow - uses active-color */
   .nav::before {
     content: '';
     display: block;
@@ -89,7 +89,7 @@
     background: var(--nav-border-gradient, #fff);
   }
 
-  /* Inner dark fill — leaves 1px rainbow border visible */
+  /* Inner dark fill - leaves 1px rainbow border visible */
   .nav ul::before {
     content: '';
     display: block;
@@ -116,7 +116,7 @@
     left: 6px;
     top: 6px;
     transform: translate(calc(var(--after-bg-position) * 1px), 0);
-    /* default: first item — pill left, squared right */
+    /* default: first item - pill left, squared right */
     border-radius: 100px 12px 12px 100px;
     transition:
       background 0.4s ease,
@@ -378,18 +378,18 @@
 </div>
 
 <script>
-// Rainbow colors — one per section (9 sections)
+// Rainbow colors - one per section (9 sections)
 const sectionColors = [
-  { color: '#e40303', dim: 'rgba(228,3,3,0.28)' },    // 0 Serenity Prayer — red
-  { color: '#ff8c00', dim: 'rgba(255,140,0,0.28)' },   // 1 Letter — orange
-  { color: '#ffed00', dim: 'rgba(255,237,0,0.28)' },   // 2 Message of Hope — yellow
-  { color: '#008026', dim: 'rgba(0,128,38,0.28)' },    // 3 12 Steps — green
-  { color: '#004dff', dim: 'rgba(0,77,255,0.28)' },    // 4 12 Traditions — blue
-  { color: '#c77dff', dim: 'rgba(199,125,255,0.28)' }, // 5 Abstinence — lavender
-  { color: '#ff61a6', dim: 'rgba(255,97,166,0.28)' },  // 6 Chips — pink
-  { color: '#00c8ff', dim: 'rgba(0,200,255,0.28)' },   // 7 Links — cyan
-  { color: '#750787', dim: 'rgba(117,7,135,0.28)' },   // 8 Keep Coming Back — violet
-  { color: '#e40303', dim: 'rgba(228,3,3,0.28)' },     // 9 Promises — red (cycle)
+  { color: '#e40303', dim: 'rgba(228,3,3,0.28)' },    // 0 Serenity Prayer - red
+  { color: '#ff8c00', dim: 'rgba(255,140,0,0.28)' },   // 1 Letter - orange
+  { color: '#ffed00', dim: 'rgba(255,237,0,0.28)' },   // 2 Message of Hope - yellow
+  { color: '#008026', dim: 'rgba(0,128,38,0.28)' },    // 3 12 Steps - green
+  { color: '#004dff', dim: 'rgba(0,77,255,0.28)' },    // 4 12 Traditions - blue
+  { color: '#c77dff', dim: 'rgba(199,125,255,0.28)' }, // 5 Abstinence - lavender
+  { color: '#ff61a6', dim: 'rgba(255,97,166,0.28)' },  // 6 Chips - pink
+  { color: '#00c8ff', dim: 'rgba(0,200,255,0.28)' },   // 7 Links - cyan
+  { color: '#750787', dim: 'rgba(117,7,135,0.28)' },   // 8 Keep Coming Back - violet
+  { color: '#e40303', dim: 'rgba(228,3,3,0.28)' },     // 9 Promises - red (cycle)
 ];
 
 const milestones = ['1D','1W','1M','2M','3M','4M','5M','6M','7M','8M','9M','10M','11M','1Y','18M','2Y','3Y','4Y','5Y','6Y','7Y','8Y','9Y','10Y','11Y','12Y','13Y','14Y','15Y'];
@@ -414,16 +414,16 @@ const sections = [
     short: "Message\nof Hope",
     label: "A Message of Hope",
     pages: [
-      { subtitle: "For sex addicts in the LGBT communities — adapted from SAA literature", content: `<p>Sex Addicts Anonymous is a spiritual program based on the principles and traditions of Alcoholics Anonymous. We are grateful to A.A. for this gift which makes our recovery possible.</p><p>Our primary purpose is to stop our addictive sexual behaviour and to help others recover from sexual addiction. Membership is open to all who have a desire to stop addictive sexual behaviour. There is no other requirement.</p>` },
-      { subtitle: "For sex addicts in the LGBT communities — adapted from SAA literature", content: `<p>Our fellowship is open to anyone regardless of age, race, religion, ethnic background, marital status, or occupation. We welcome members of any sexual orientation or gender.</p><p>Many of our sexual behaviours produced negative consequences. These behaviours are not gender specific and may cross lines of sexual orientation.</p>` },
-      { subtitle: "For sex addicts in the LGBT communities — adapted from SAA literature", content: `<p>For many of us, the spiral of sexual addiction led to what we called "hitting rock bottom" — to reach such a low point mentally, physically, emotionally, and spiritually that we break through our denial.</p><p>We now use our sense of surrender in a healthy manner. Now we start to surrender and become teachable, to a healthier way of life filled with hope, growth, and change.</p>` }
+      { subtitle: "For sex addicts in the LGBT communities - adapted from SAA literature", content: `<p>Sex Addicts Anonymous is a spiritual program based on the principles and traditions of Alcoholics Anonymous. We are grateful to A.A. for this gift which makes our recovery possible.</p><p>Our primary purpose is to stop our addictive sexual behaviour and to help others recover from sexual addiction. Membership is open to all who have a desire to stop addictive sexual behaviour. There is no other requirement.</p>` },
+      { subtitle: "For sex addicts in the LGBT communities - adapted from SAA literature", content: `<p>Our fellowship is open to anyone regardless of age, race, religion, ethnic background, marital status, or occupation. We welcome members of any sexual orientation or gender.</p><p>Many of our sexual behaviours produced negative consequences. These behaviours are not gender specific and may cross lines of sexual orientation.</p>` },
+      { subtitle: "For sex addicts in the LGBT communities - adapted from SAA literature", content: `<p>For many of us, the spiral of sexual addiction led to what we called "hitting rock bottom" - to reach such a low point mentally, physically, emotionally, and spiritually that we break through our denial.</p><p>We now use our sense of surrender in a healthy manner. Now we start to surrender and become teachable, to a healthier way of life filled with hope, growth, and change.</p>` }
     ]
   },
   {
     short: "12\nSteps",
     label: "The Twelve Steps of SAA",
     pages: [
-      { subtitle: "Sex Addicts Anonymous, p. 20–21", content: `<ol start="1"><li>We admitted we were powerless over addictive sexual behaviour — that our lives had become unmanageable.</li><li>Came to believe that a Power greater than ourselves could restore us to sanity.</li><li>Made a decision to turn our will and our lives over to the care of God as we understood God.</li><li>Made a searching and fearless moral inventory of ourselves.</li></ol>` },
+      { subtitle: "Sex Addicts Anonymous, p. 20–21", content: `<ol start="1"><li>We admitted we were powerless over addictive sexual behaviour - that our lives had become unmanageable.</li><li>Came to believe that a Power greater than ourselves could restore us to sanity.</li><li>Made a decision to turn our will and our lives over to the care of God as we understood God.</li><li>Made a searching and fearless moral inventory of ourselves.</li></ol>` },
       { subtitle: "Sex Addicts Anonymous, p. 20–21", content: `<ol start="5"><li>Admitted to God, to ourselves, and to another human being the exact nature of our wrongs.</li><li>Were entirely ready to have God remove all these defects of character.</li><li>Humbly asked God to remove our shortcomings.</li><li>Made a list of all persons we had harmed and became willing to make amends to them all.</li></ol>` },
       { subtitle: "Sex Addicts Anonymous, p. 20–21", content: `<ol start="9"><li>Made direct amends to such people wherever possible, except when to do so would injure them or others.</li><li>Continued to take personal inventory and when we were wrong promptly admitted it.</li><li>Sought through prayer and meditation to improve our conscious contact with God as we understood God, praying only for knowledge of God's will for us and the power to carry that out.</li><li>Having had a spiritual awakening as the result of these steps, we tried to carry this message to other sex addicts and to practise these principles in our lives.</li></ol>` }
     ]
@@ -432,8 +432,8 @@ const sections = [
     short: "12\nTraditions",
     label: "The Twelve Traditions of SAA",
     pages: [
-      { subtitle: "Sex Addicts Anonymous, p. 77", content: `<ol start="1"><li>Our common welfare should come first; personal recovery depends upon SAA unity.</li><li>For our group purpose there is but one ultimate authority — a loving God as expressed in our group conscience. Our leaders are but trusted servants; they do not govern.</li><li>The only requirement for SAA membership is a desire to stop addictive sexual behaviour.</li><li>Each group should be autonomous except in matters affecting other groups or SAA as a whole.</li></ol>` },
-      { subtitle: "Sex Addicts Anonymous, p. 77", content: `<ol start="5"><li>Each group has but one primary purpose — to carry its message to the sex addict who still suffers.</li><li>An SAA group ought never endorse, finance, or lend the SAA name to any related facility or outside enterprise, lest problems of money, property, and prestige divert us from our primary purpose.</li><li>Every SAA group ought to be fully self-supporting.</li><li>SAA should remain forever nonprofessional, but our service centres may employ special workers.</li></ol>` },
+      { subtitle: "Sex Addicts Anonymous, p. 77", content: `<ol start="1"><li>Our common welfare should come first; personal recovery depends upon SAA unity.</li><li>For our group purpose there is but one ultimate authority - a loving God as expressed in our group conscience. Our leaders are but trusted servants; they do not govern.</li><li>The only requirement for SAA membership is a desire to stop addictive sexual behaviour.</li><li>Each group should be autonomous except in matters affecting other groups or SAA as a whole.</li></ol>` },
+      { subtitle: "Sex Addicts Anonymous, p. 77", content: `<ol start="5"><li>Each group has but one primary purpose - to carry its message to the sex addict who still suffers.</li><li>An SAA group ought never endorse, finance, or lend the SAA name to any related facility or outside enterprise, lest problems of money, property, and prestige divert us from our primary purpose.</li><li>Every SAA group ought to be fully self-supporting.</li><li>SAA should remain forever nonprofessional, but our service centres may employ special workers.</li></ol>` },
       { subtitle: "Sex Addicts Anonymous, p. 77", content: `<ol start="9"><li>SAA, as such, ought never be organised; but we may create service boards or committees directly responsible to those they serve.</li><li>SAA has no opinion on outside issues; hence the SAA name ought never be drawn into public controversy.</li><li>Our public relations policy is based on attraction rather than promotion; we need always maintain personal anonymity at the level of press, radio, TV, and films.</li><li>Anonymity is the spiritual foundation of all our traditions, ever reminding us to place principles before personalities.</li></ol>` }
     ]
   },
@@ -471,7 +471,7 @@ const sections = [
     pages: [
       { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<p>If we are painstaking about this phase of our development, we will be amazed before we are half way through.</p><ul><li>We are going to know a new freedom and a new happiness.</li><li>We will not regret the past nor wish to shut the door on it.</li><li>We will comprehend the word serenity and we will know peace.</li><li>No matter how far down the scale we have gone, we will see how our experience can benefit others.</li><li>That feeling of uselessness and self-pity will disappear.</li></ul>` },
       { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<ul><li>We will lose interest in selfish things and gain interest in our fellows.</li><li>Self-seeking will slip away.</li><li>Our whole attitude and outlook upon life will change.</li><li>Fear of people and of economic insecurity will leave us.</li><li>We will intuitively know how to handle situations which used to baffle us.</li><li>We will suddenly realise that God is doing for us what we could not do for ourselves.</li></ul>` },
-      { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<p>Are these extravagant promises? We think not.</p><p>They are being fulfilled among us — sometimes quickly, sometimes slowly. They will always materialise if we work for them.</p>` }
+      { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<p>Are these extravagant promises? We think not.</p><p>They are being fulfilled among us - sometimes quickly, sometimes slowly. They will always materialise if we work for them.</p>` }
     ]
   }
 ];
@@ -590,12 +590,12 @@ function buildLinksSlide(idx) {
       <div class="links-list">
         <a class="link-card" href="https://saa-recovery.org/daily-meditation-from-voices-of-recovery/" target="_blank" rel="noopener">
           <div class="link-card-label">Voices in Recovery</div>
-          <div class="link-card-title">Voices of Recovery — Daily Meditation Book</div>
+          <div class="link-card-title">Voices of Recovery - Daily Meditation Book</div>
           <div class="link-card-url">saa-recovery.org</div>
         </a>
         <a class="link-card" href="https://saa-recovery.org/literature/sex-addicts-anonymous-green-book-saas-basic-text/" target="_blank" rel="noopener">
           <div class="link-card-label">Green Book</div>
-          <div class="link-card-title">Sex Addicts Anonymous — SAA's Basic Text</div>
+          <div class="link-card-title">Sex Addicts Anonymous - SAA's Basic Text</div>
           <div class="link-card-url">saa-recovery.org</div>
         </a>
         <a class="link-card" href="https://saa-recovery.org/literature/first-step-intimacy-guide-working-first-step-intimacy-sexual-avoidance-sexual-anorexia/" target="_blank" rel="noopener">
