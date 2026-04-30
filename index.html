@@ -10,9 +10,67 @@
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: hsl(221deg 16% 6%);
-    color: #fff;
+    background: var(--body-bg);
+    color: var(--text-primary);
     height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  :root {
+    --body-bg: hsl(221deg 16% 6%);
+    --nav-inner-bg: hsl(221deg 16% 6%);
+    --text-primary: #fff;
+    --text-secondary: rgba(255,255,255,0.8);
+    --text-muted: rgba(255,255,255,0.35);
+    --text-subtitle: rgba(255,255,255,0.45);
+    --nav-divider: rgba(255,255,255,0.1);
+    --slide-body-color: rgba(255,255,255,0.8);
+    --link-card-border: rgba(255,255,255,0.1);
+    --link-card-hover-border: rgba(255,255,255,0.25);
+    --link-card-hover-bg: rgba(255,255,255,0.05);
+    --milestone-bg: rgba(255,255,255,0.05);
+    --milestone-border: rgba(255,255,255,0.12);
+    --milestone-hover-bg: rgba(255,255,255,0.10);
+    --milestone-hover-border: rgba(255,255,255,0.25);
+    --milestone-active-bg: rgba(255,255,255,0.15);
+    --milestone-active-border: rgba(255,255,255,0.40);
+    --chips-placeholder-border: rgba(255,255,255,0.15);
+    --chips-placeholder-color: rgba(255,255,255,0.25);
+    --mode-btn-bg: rgba(255,255,255,0.07);
+    --mode-btn-border: rgba(255,255,255,0.15);
+    --mode-btn-color: rgba(255,255,255,0.55);
+    --scrollbar-color: rgba(255,255,255,0.15);
+    --trs-easing: cubic-bezier(.41,-0.09,.55,1.09);
+    --trs-timing: 300ms;
+    --trs-delay: 80ms;
+    --active-color: #fff;
+    --active-color-dim: rgba(255,255,255,0.25);
+  }
+
+  [data-theme="light"] {
+    --body-bg: hsl(220deg 20% 97%);
+    --nav-inner-bg: hsl(220deg 20% 97%);
+    --text-primary: hsl(221deg 20% 12%);
+    --text-secondary: hsl(221deg 15% 25%);
+    --text-muted: hsl(221deg 10% 50%);
+    --text-subtitle: hsl(221deg 10% 45%);
+    --nav-divider: rgba(0,0,0,0.08);
+    --slide-body-color: hsl(221deg 15% 22%);
+    --link-card-border: rgba(0,0,0,0.1);
+    --link-card-hover-border: rgba(0,0,0,0.22);
+    --link-card-hover-bg: rgba(0,0,0,0.03);
+    --milestone-bg: rgba(0,0,0,0.04);
+    --milestone-border: rgba(0,0,0,0.10);
+    --milestone-hover-bg: rgba(0,0,0,0.07);
+    --milestone-hover-border: rgba(0,0,0,0.20);
+    --milestone-active-bg: rgba(0,0,0,0.10);
+    --milestone-active-border: rgba(0,0,0,0.30);
+    --chips-placeholder-border: rgba(0,0,0,0.12);
+    --chips-placeholder-color: rgba(0,0,0,0.25);
+    --mode-btn-bg: rgba(0,0,0,0.05);
+    --mode-btn-border: rgba(0,0,0,0.12);
+    --mode-btn-color: hsl(221deg 10% 40%);
+    --scrollbar-color: rgba(0,0,0,0.12);
   }
 
   .shell {
@@ -21,12 +79,8 @@
     height: 100vh;
     padding: 1rem 1.5rem;
   }
+  @media (min-width: 600px) { .shell { padding: 1.5rem 2.5rem; } }
 
-  @media (min-width: 600px) {
-    .shell { padding: 1.5rem 2.5rem; }
-  }
-
-  /* ── CSS custom properties for animation ── */
   @layer properties {
     @property --after-bg-position        { syntax:'<number>'; inherits:true; initial-value:0; }
     @property --after-radial-bg-position { syntax:'<number>'; inherits:true; initial-value:0; }
@@ -37,31 +91,28 @@
     @property --li-before-opacity        { syntax:'<number>'; inherits:true; initial-value:0; }
   }
 
-  :root {
-    --body-bg-color: hsl(221deg 16% 6%);
-    --trs-easing: cubic-bezier(.41,-0.09,.55,1.09);
-    --trs-timing: 300ms;
-    --trs-delay: 80ms;
-    --active-color: #fff;
-    --active-color-dim: rgba(255,255,255,0.25);
+  /* ── Nav row ── */
+  .nav-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    margin-bottom: 1.5rem;
   }
 
-  /* ── Nav ── */
   .nav {
+    flex: 1;
     transition:
       --after-bg-position var(--trs-timing) var(--trs-easing) .2s,
       --after-radial-bg-position var(--trs-timing) var(--trs-easing) .2s,
       --after-bg-width var(--trs-timing) var(--trs-easing) .2s,
       --after-bg-opacity var(--trs-timing) var(--trs-easing) .2s,
       --li-before-opacity var(--trs-timing) var(--trs-easing) .2s;
-    background: var(--body-bg-color);
+    background: var(--nav-inner-bg);
     border-radius: 100px;
     position: relative;
-    flex-shrink: 0;
-    margin-bottom: 1.5rem;
   }
 
-  /* Outer glow - uses active-color */
   .nav::before {
     content: '';
     display: block;
@@ -71,16 +122,14 @@
     background: var(--active-color-dim);
     border-radius: 100px;
     filter: blur(22px);
-    left: 0;
-    top: 0;
+    left: 0; top: 0;
     transform: translateX(calc(var(--after-bg-position) * 1px)) scale(1.15);
     transition: background 0.4s ease;
   }
 
   .nav ul {
     position: relative;
-    padding: 0;
-    margin: 0;
+    padding: 0; margin: 0;
     list-style: none;
     display: flex;
     justify-content: space-between;
@@ -89,21 +138,19 @@
     background: var(--nav-border-gradient, #fff);
   }
 
-  /* Inner dark fill - leaves 1px rainbow border visible */
   .nav ul::before {
     content: '';
     display: block;
     position: absolute;
     width: calc(100% - 2px);
     height: calc(100% - 2px);
-    background: var(--body-bg-color);
-    top: 1px;
-    left: 1px;
+    background: var(--nav-inner-bg);
+    top: 1px; left: 1px;
     border-radius: 100px;
     z-index: 0;
+    transition: background 0.3s ease;
   }
 
-  /* Sliding highlight pill */
   .nav ul::after {
     content: '';
     display: block;
@@ -113,55 +160,41 @@
     height: calc(100% - 12px);
     background: linear-gradient(to bottom, var(--active-color-dim), rgba(255,255,255,0.06));
     box-shadow: inset 0 -6px 12px var(--active-color-dim);
-    left: 6px;
-    top: 6px;
+    left: 6px; top: 6px;
     transform: translate(calc(var(--after-bg-position) * 1px), 0);
-    /* default: first item - pill left, squared right */
     border-radius: 100px 12px 12px 100px;
-    transition:
-      background 0.4s ease,
-      box-shadow 0.4s ease,
-      border-radius var(--trs-timing) var(--trs-easing) var(--trs-delay);
+    transition: background 0.4s ease, box-shadow 0.4s ease, border-radius var(--trs-timing) var(--trs-easing) var(--trs-delay);
     pointer-events: none;
   }
 
-  /* Border-radius states driven by JS data attribute */
   .nav[data-pos="first"]  ul::after { border-radius: 100px 12px 12px 100px; }
   .nav[data-pos="middle"] ul::after { border-radius: 12px; }
   .nav[data-pos="last"]   ul::after { border-radius: 12px 100px 100px 12px; }
 
   .nav ul li {
     padding: 0.6em 0.5em;
-    height: 100%;
-    width: 100%;
+    height: 100%; width: 100%;
     position: relative;
     transform-style: preserve-3d;
     perspective: 800px;
     z-index: 2;
   }
-
   .nav ul li:not(.active):hover { --li-before-opacity: 0.3; }
-
   .nav ul li::before {
     content: '';
     display: block;
     position: absolute;
     z-index: 1;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
+    width: 100%; height: 100%;
+    top: 0; left: 0;
     border-radius: 8px;
     pointer-events: none;
     user-select: none;
     background: linear-gradient(to bottom, rgb(255 255 255 / 5%), rgb(255 255 255 / 35%));
     opacity: var(--li-before-opacity);
     transform: scale(var(--after-scale)) rotateY(calc(var(--tilt-bg-y, 0) * 3 * -1deg)) rotateX(calc(var(--tilt-bg-x, 0) * 3 * 1deg)) translateZ(15px);
-    transition:
-      --li-before-opacity var(--trs-timing) var(--trs-easing),
-      --after-scale calc(var(--trs-timing)/2) var(--trs-easing) calc(var(--trs-delay)/2);
+    transition: --li-before-opacity var(--trs-timing) var(--trs-easing), --after-scale calc(var(--trs-timing)/2) var(--trs-easing) calc(var(--trs-delay)/2);
   }
-
   .nav ul li:first-of-type::before { border-radius: 100px 12px 12px 100px; }
   .nav ul li:last-of-type::before  { border-radius: 12px 100px 100px 12px; }
 
@@ -169,12 +202,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
-    background: none;
-    border: none;
+    width: 100%; height: 100%;
+    background: none; border: none;
     cursor: pointer;
-    color: rgb(255 255 255 / 45%);
+    color: var(--text-muted);
     font-size: clamp(7px, 1.8vw, 11px);
     font-weight: 500;
     font-family: inherit;
@@ -186,9 +217,30 @@
     transition: color 0.2s;
     padding: 0;
   }
+  .nav ul li.active button { color: var(--text-primary); }
+  .nav ul li:not(.active):hover button { color: var(--text-secondary); }
 
-  .nav ul li.active button { color: #fff; }
-  .nav ul li:not(.active):hover button { color: rgb(255 255 255 / 70%); }
+  /* ── Mode toggle ── */
+  .mode-btn {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--mode-btn-border);
+    background: var(--mode-btn-bg);
+    color: var(--mode-btn-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    font-size: 13px;
+    line-height: 1;
+  }
+  .mode-btn:hover {
+    background: var(--active-color-dim);
+    border-color: var(--active-color);
+  }
 
   /* ── Slides ── */
   .slides-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
@@ -199,16 +251,15 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: safe center;
     max-width: 1200px;
     width: 100%;
     margin: auto;
     overflow-y: auto;
     padding-bottom: 1rem;
     scrollbar-width: thin;
-    scrollbar-color: rgb(255 255 255 / 15%) transparent;
+    scrollbar-color: var(--scrollbar-color) transparent;
   }
-  /* Links slide: top-aligned so it can scroll naturally */
   .slide-inner.links-inner { justify-content: flex-start; padding-top: 0.5rem; }
 
   .section-label {
@@ -216,34 +267,37 @@
     font-weight: 500;
     letter-spacing: 0.09em;
     text-transform: uppercase;
-    color: rgb(255 255 255 / 35%);
+    color: var(--text-muted);
     margin-bottom: 0.6rem;
     flex-shrink: 0;
+    transition: color 0.3s ease;
   }
 
   .slide-title {
     font-size: clamp(18px, 3vw, 36px);
     font-weight: 500;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 0.85rem;
     line-height: 1.2;
     flex-shrink: 0;
+    transition: color 0.3s ease;
   }
 
   .slide-subtitle {
     font-size: clamp(13px, 1.4vw, 15px);
-    color: rgb(255 255 255 / 45%);
+    color: var(--text-subtitle);
     margin-bottom: 1rem;
     font-style: italic;
     flex-shrink: 0;
+    transition: color 0.3s ease;
   }
 
   .slide-body {
     font-size: clamp(14px, 2vw, 23px);
-    color: rgb(255 255 255 / 80%);
+    color: var(--slide-body-color);
     line-height: 1.75;
+    transition: color 0.3s ease;
   }
-
   .slide-body p { margin-bottom: 1rem; }
   .slide-body ol, .slide-body ul { padding-left: 2.25rem; }
   .slide-body li { margin-bottom: 0.65rem; line-height: 1.75; }
@@ -254,40 +308,14 @@
     font-family: Georgia, "Times New Roman", serif;
   }
 
-  .page-number {
-    text-align: center;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    color: rgb(255 255 255 / 35%);
-    margin-bottom: 0.4rem;
-    flex-shrink: 0;
-  }
-
-  .page-indicator {
-    position: relative;
-    height: 3px;
-    background: rgb(255 255 255 / 10%);
-    border-radius: 0 0 2px 2px;
-    flex-shrink: 0;
-    overflow: hidden;
-    margin-bottom: 0.85rem;
-  }
-  .page-indicator-fill {
-    position: absolute;
-    inset: 0 auto 0 0;
-    border-radius: 0 0 2px 2px;
-    background: linear-gradient(to right, rgb(255 255 255 / 30%), var(--active-color));
-    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
-  }
-
   .nav-btns {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid rgb(255 255 255 / 10%);
+    border-top: 1px solid var(--nav-divider);
     padding-top: 1rem;
     flex-shrink: 0;
+    transition: border-color 0.3s ease;
   }
 
   .nav-btn {
@@ -299,115 +327,95 @@
     font-weight: 500;
     cursor: pointer;
     color: var(--active-color);
+    font-family: inherit;
     transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
-
   .nav-btn:hover { background: var(--active-color-dim); }
   .nav-btn:disabled { opacity: 0.2; cursor: default; }
 
   /* ── Chips ── */
   .chips-layout { display: flex; gap: 2rem; flex: 1; overflow: hidden; align-items: center; }
-
   .chips-image-panel {
     flex: 0 0 40%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    height: 100%; position: relative;
   }
-
   .chips-image-panel img {
-    max-height: 100%;
-    max-width: 100%;
+    max-height: 100%; max-width: 100%;
     object-fit: contain;
     position: absolute;
     opacity: 0;
     transform: scale(0.6) rotate(-8deg);
     pointer-events: none;
   }
-
   @keyframes chipPop {
     0%   { opacity: 0; transform: scale(0.5) rotate(-12deg); }
     55%  { opacity: 1; transform: scale(1.08) rotate(3deg); }
     75%  { transform: scale(0.96) rotate(-1deg); }
     100% { opacity: 1; transform: scale(1) rotate(0deg); }
   }
-
-  .chips-image-panel img.visible {
-    animation: chipPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  }
-
+  .chips-image-panel img.visible { animation: chipPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
   .chips-placeholder {
     width: 200px; height: 200px; border-radius: 50%;
-    border: 2px dashed rgb(255 255 255 / 15%);
+    border: 2px dashed var(--chips-placeholder-border);
     display: flex; align-items: center; justify-content: center;
-    color: rgb(255 255 255 / 25%); font-size: 14px;
-    text-align: center; padding: 1rem; transition: opacity 0.2s;
+    color: var(--chips-placeholder-color); font-size: 14px;
+    text-align: center; padding: 1rem; transition: opacity 0.2s, border-color 0.3s, color 0.3s;
   }
   .chips-placeholder.hidden { opacity: 0; }
-
   .chips-controls { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; }
-  .chips-controls h2 { font-size: clamp(18px, 2vw, 26px); font-weight: 500; color: #fff; margin-bottom: 0.75rem; }
-
+  .chips-controls h2 { font-size: clamp(18px, 2vw, 26px); font-weight: 500; color: var(--text-primary); margin-bottom: 0.75rem; transition: color 0.3s; }
   .milestone-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; }
-
   .milestone-btn {
     padding: 10px 6px;
-    border: 1px solid rgb(255 255 255 / 12%);
+    border: 1px solid var(--milestone-border);
     border-radius: 8px;
-    background: rgb(255 255 255 / 5%);
-    cursor: pointer;
-    font-size: 14px; font-weight: 500;
-    color: rgb(255 255 255 / 65%);
-    transition: all 0.12s;
-    text-align: center; font-family: inherit;
+    background: var(--milestone-bg);
+    cursor: pointer; font-size: 14px; font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.12s; text-align: center; font-family: inherit;
   }
-  .milestone-btn:hover { background: rgb(255 255 255 / 10%); border-color: rgb(255 255 255 / 25%); color: #fff; }
-  .milestone-btn.active { background: rgb(255 255 255 / 15%); color: #fff; border-color: rgb(255 255 255 / 40%); }
+  .milestone-btn:hover { background: var(--milestone-hover-bg); border-color: var(--milestone-hover-border); color: var(--text-primary); }
+  .milestone-btn.active { background: var(--milestone-active-bg); color: var(--text-primary); border-color: var(--milestone-active-border); }
 
   /* ── Links ── */
-  .links-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.85rem;
-  }
-  @media (min-width: 700px) {
-    .links-list { grid-template-columns: 1fr 1fr; gap: 1.1rem; }
-  }
+  .links-list { display: grid; grid-template-columns: 1fr; gap: 0.85rem; }
+  @media (min-width: 700px) { .links-list { grid-template-columns: 1fr 1fr; gap: 1.1rem; } }
   .link-card {
-    border: 1px solid rgb(255 255 255 / 10%);
+    border: 1px solid var(--link-card-border);
     border-radius: 10px; padding: 1rem 1.25rem;
     text-decoration: none; color: inherit;
     transition: border-color 0.15s, background 0.15s; display: block;
   }
-  .link-card:hover { border-color: rgb(255 255 255 / 25%); background: rgb(255 255 255 / 5%); }
-  .link-card-label { font-size: clamp(10px,1.1vw,12px); font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgb(255 255 255 / 35%); margin-bottom: 0.25rem; }
-  .link-card-title { font-size: clamp(14px,1.5vw,19px); font-weight: 500; color: #fff; margin-bottom: 0.15rem; line-height: 1.3; }
-  .link-card-url { font-size: clamp(11px,1.1vw,13px); color: rgb(255 255 255 / 35%); }
+  .link-card:hover { border-color: var(--link-card-hover-border); background: var(--link-card-hover-bg); }
+  .link-card-label { font-size: clamp(10px,1.1vw,12px); font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.25rem; }
+  .link-card-title { font-size: clamp(14px,1.5vw,19px); font-weight: 500; color: var(--text-primary); margin-bottom: 0.15rem; line-height: 1.3; }
+  .link-card-url { font-size: clamp(11px,1.1vw,13px); color: var(--text-muted); }
 </style>
 </head>
 <body>
 <div class="shell">
-  <nav class="nav" id="mainNav" data-pos="first">
-    <ul id="navList"></ul>
-  </nav>
+  <div class="nav-row">
+    <nav class="nav" id="mainNav" data-pos="first">
+      <ul id="navList"></ul>
+    </nav>
+    <button class="mode-btn" id="modeBtn" onclick="toggleMode()" title="Toggle light/dark mode">🌙</button>
+  </div>
   <div class="slides-wrap" id="slides"></div>
 </div>
 
 <script>
-// Rainbow colors - one per section (9 sections)
 const sectionColors = [
-  { color: '#e40303', dim: 'rgba(228,3,3,0.28)' },    // 0 Serenity Prayer - red
-  { color: '#ff8c00', dim: 'rgba(255,140,0,0.28)' },   // 1 Letter - orange
-  { color: '#ffed00', dim: 'rgba(255,237,0,0.28)' },   // 2 Message of Hope - yellow
-  { color: '#008026', dim: 'rgba(0,128,38,0.28)' },    // 3 12 Steps - green
-  { color: '#004dff', dim: 'rgba(0,77,255,0.28)' },    // 4 12 Traditions - blue
-  { color: '#c77dff', dim: 'rgba(199,125,255,0.28)' }, // 5 Abstinence - lavender
-  { color: '#ff61a6', dim: 'rgba(255,97,166,0.28)' },  // 6 Chips - pink
-  { color: '#00c8ff', dim: 'rgba(0,200,255,0.28)' },   // 7 Links - cyan
-  { color: '#750787', dim: 'rgba(117,7,135,0.28)' },   // 8 Keep Coming Back - violet
-  { color: '#e40303', dim: 'rgba(228,3,3,0.28)' },     // 9 Promises - red (cycle)
+  { color: '#e40303', dim: 'rgba(228,3,3,0.28)' },
+  { color: '#ff8c00', dim: 'rgba(255,140,0,0.28)' },
+  { color: '#ffed00', dim: 'rgba(255,237,0,0.28)' },
+  { color: '#008026', dim: 'rgba(0,128,38,0.28)' },
+  { color: '#004dff', dim: 'rgba(0,77,255,0.28)' },
+  { color: '#c77dff', dim: 'rgba(199,125,255,0.28)' },
+  { color: '#ff61a6', dim: 'rgba(255,97,166,0.28)' },
+  { color: '#00c8ff', dim: 'rgba(0,200,255,0.28)' },
+  { color: '#750787', dim: 'rgba(117,7,135,0.28)' },
+  { color: '#e40303', dim: 'rgba(228,3,3,0.28)' },
 ];
 
 const milestones = ['1D','1W','1M','2M','3M','4M','5M','6M','7M','8M','9M','10M','11M','1Y','18M','2Y','3Y','4Y','5Y','6Y','7Y','8Y','9Y','10Y','11Y','12Y','13Y','14Y','15Y'];
@@ -416,90 +424,102 @@ const sections = [
   {
     short: "Serenity\nPrayer",
     label: "The Serenity Prayer",
-    pages: [
-      { content: `<p class="prayer-text">God, grant me the<br>Serenity to accept the things I cannot change,<br>Courage to change the things I can,<br>and Wisdom to know the difference.</p>` }
-    ]
+    content: `<p class="prayer-text">God, grant me the Serenity <br>to accept the things I cannot change,<br>Courage to change the things I can,<br>and Wisdom to know the difference.</p>`
   },
   {
     short: "12\nSteps",
     label: "The Twelve Steps of SAA",
-    pages: [
-      { subtitle: "Sex Addicts Anonymous, p. 20–21", content: `<ol start="1"><li>We admitted we were powerless over addictive sexual behaviour - that our lives had become unmanageable.</li><li>Came to believe that a Power greater than ourselves could restore us to sanity.</li><li>Made a decision to turn our will and our lives over to the care of God as we understood God.</li><li>Made a searching and fearless moral inventory of ourselves.</li></ol>` },
-      { subtitle: "Sex Addicts Anonymous, p. 20–21", content: `<ol start="5"><li>Admitted to God, to ourselves, and to another human being the exact nature of our wrongs.</li><li>Were entirely ready to have God remove all these defects of character.</li><li>Humbly asked God to remove our shortcomings.</li><li>Made a list of all persons we had harmed and became willing to make amends to them all.</li></ol>` },
-      { subtitle: "Sex Addicts Anonymous, p. 20–21", content: `<ol start="9"><li>Made direct amends to such people wherever possible, except when to do so would injure them or others.</li><li>Continued to take personal inventory and when we were wrong promptly admitted it.</li><li>Sought through prayer and meditation to improve our conscious contact with God as we understood God, praying only for knowledge of God's will for us and the power to carry that out.</li><li>Having had a spiritual awakening as the result of these steps, we tried to carry this message to other sex addicts and to practise these principles in our lives.</li></ol>` }
-    ]
+    subtitle: "Sex Addicts Anonymous, p. 20–21",
+    content: `<ol>
+      <li>We admitted we were powerless over addictive sexual behaviour - that our lives had become unmanageable.</li>
+      <li>Came to believe that a Power greater than ourselves could restore us to sanity.</li>
+      <li>Made a decision to turn our will and our lives over to the care of God as we understood God.</li>
+      <li>Made a searching and fearless moral inventory of ourselves.</li>
+      <li>Admitted to God, to ourselves, and to another human being the exact nature of our wrongs.</li>
+      <li>Were entirely ready to have God remove all these defects of character.</li>
+      <li>Humbly asked God to remove our shortcomings.</li>
+      <li>Made a list of all persons we had harmed and became willing to make amends to them all.</li>
+      <li>Made direct amends to such people wherever possible, except when to do so would injure them or others.</li>
+      <li>Continued to take personal inventory and when we were wrong promptly admitted it.</li>
+      <li>Sought through prayer and meditation to improve our conscious contact with God as we understood God, praying only for knowledge of God's will for us and the power to carry that out.</li>
+      <li>Having had a spiritual awakening as the result of these steps, we tried to carry this message to other sex addicts and to practise these principles in our lives.</li>
+    </ol>`
   },
   {
     short: "12\nTraditions",
     label: "The Twelve Traditions of SAA",
-    pages: [
-      { subtitle: "Sex Addicts Anonymous, p. 77", content: `<ol start="1"><li>Our common welfare should come first; personal recovery depends upon SAA unity.</li><li>For our group purpose there is but one ultimate authority - a loving God as expressed in our group conscience. Our leaders are but trusted servants; they do not govern.</li><li>The only requirement for SAA membership is a desire to stop addictive sexual behaviour.</li><li>Each group should be autonomous except in matters affecting other groups or SAA as a whole.</li></ol>` },
-      { subtitle: "Sex Addicts Anonymous, p. 77", content: `<ol start="5"><li>Each group has but one primary purpose - to carry its message to the sex addict who still suffers.</li><li>An SAA group ought never endorse, finance, or lend the SAA name to any related facility or outside enterprise, lest problems of money, property, and prestige divert us from our primary purpose.</li><li>Every SAA group ought to be fully self-supporting.</li><li>SAA should remain forever nonprofessional, but our service centres may employ special workers.</li></ol>` },
-      { subtitle: "Sex Addicts Anonymous, p. 77", content: `<ol start="9"><li>SAA, as such, ought never be organised; but we may create service boards or committees directly responsible to those they serve.</li><li>SAA has no opinion on outside issues; hence the SAA name ought never be drawn into public controversy.</li><li>Our public relations policy is based on attraction rather than promotion; we need always maintain personal anonymity at the level of press, radio, TV, and films.</li><li>Anonymity is the spiritual foundation of all our traditions, ever reminding us to place principles before personalities.</li></ol>` }
-    ]
+    subtitle: "Sex Addicts Anonymous, p. 77",
+    content: `<ol>
+      <li>Our common welfare should come first; personal recovery depends upon SAA unity.</li>
+      <li>For our group purpose there is but one ultimate authority - a loving God as expressed in our group conscience. Our leaders are but trusted servants; they do not govern.</li>
+      <li>The only requirement for SAA membership is a desire to stop addictive sexual behaviour.</li>
+      <li>Each group should be autonomous except in matters affecting other groups or SAA as a whole.</li>
+      <li>Each group has but one primary purpose - to carry its message to the sex addict who still suffers.</li>
+      <li>An SAA group ought never endorse, finance, or lend the SAA name to any related facility or outside enterprise, lest problems of money, property, and prestige divert us from our primary purpose.</li>
+      <li>Every SAA group ought to be fully self-supporting.</li>
+      <li>SAA should remain forever nonprofessional, but our service centres may employ special workers.</li>
+      <li>SAA, as such, ought never be organised; but we may create service boards or committees directly responsible to those they serve.</li>
+      <li>SAA has no opinion on outside issues; hence the SAA name ought never be drawn into public controversy.</li>
+      <li>Our public relations policy is based on attraction rather than promotion; we need always maintain personal anonymity at the level of press, radio, TV, and films.</li>
+      <li>Anonymity is the spiritual foundation of all our traditions, ever reminding us to place principles before personalities.</li>
+    </ol>`
   },
   {
     short: "Abstinence\nStatement",
     label: "Abstinence Statement",
-    pages: [
-      { content: `<p>Our goal when entering SAA is abstinence from one or more specific sexual behaviors. But unlike programs for recovering alcoholics or drug addicts, Sex Addicts Anonymous does not have a universal definition of abstinence. Most of us have no desire to stop being sexual altogether. It is not sex in and of itself that causes us problems, but the addiction to certain sexual behaviors.</p><p>We are individuals, and our addictive behaviors, while similar, are unique to us. What may be healthy for one member could be clearly addictive for another.</p>` },
-      { content: `<p>We carefully consider which behaviors we feel powerless to stop, and which sexual acts lead to feelings of demoralization or other negative consequences. We also consider which sexual behaviors are acceptable to us, or even experienced with a sense of gratitude and enjoyment.</p><p>We have learned that our ideas of what is healthy and what is addictive evolve with experience. In time, we are able to define our individual abstinence with honesty, fairness, and gentleness.</p>` }
-    ]
+    content: `<p>Our goal when entering SAA is abstinence from one or more specific sexual behaviors. But unlike programs for recovering alcoholics or drug addicts, Sex Addicts Anonymous does not have a universal definition of abstinence. Most of us have no desire to stop being sexual altogether. It is not sex in and of itself that causes us problems, but the addiction to certain sexual behaviors. We are individuals, and our addictive behaviors, while similar, are unique to us. What may be healthy for one member could be clearly addictive for another.</p>
+      <p>We carefully consider which behaviors we feel powerless to stop, and which sexual acts lead to feelings of demoralization or other negative consequences. We also consider which sexual behaviors are acceptable to us, or even experienced with a sense of gratitude and enjoyment. We have learned that our ideas of what is healthy and what is addictive evolve with experience. In time, we are able to define our individual abstinence with honesty, fairness, and gentleness.</p>`
   },
   {
     short: "Letter to\nNewcomers",
     label: "A Letter to Newcomers",
-    pages: [
-      { content: `<p>For any newcomers with us for their first meeting, welcome! We acknowledge you for the courage it took to get here. At the end there will be a time for you to ask questions and get contact information from others to support you in your recovery.</p><p>It is suggested that you attend six meetings before deciding if SAA is for you. Please know you are welcome here and do keep coming back. You have found a safe place in which to heal yourself from harmful sexual behaviours.</p>` },
-      { content: `<p>Recovery meetings offer an accepting, non-judgmental environment where we can share our common struggles and learn how to apply some simple principles in our everyday lives.</p><p>The only requirement for membership is a desire to stop addictive sexual behaviours. There are no application forms or registration fees. We practise strict anonymity and confidentiality, so that our meetings are a safe place for all of us. Whoever we meet and whatever is said in a meeting is confidential and should not be disclosed to anyone else.</p>` }
-    ]
+    content: `<p>For any newcomers with us for their first meeting, welcome! We acknowledge you for the courage it took to get here. At the end there will be a time for you to ask questions and get contact information from others to support you in your recovery.</p>
+      <p>It is suggested that you attend six meetings before deciding if SAA is right for you. Please know you are welcome here and do keep coming back. You have found a safe place in which to heal yourself from harmful sexual behaviours.</p>
+      <p>Recovery meetings offer an accepting, non-judgmental environment where we can share our common struggles and learn how to apply some simple principles in our everyday lives.</p>
+      <p>The only requirement for membership is a desire to stop addictive sexual behaviours. There are no application forms or registration fees. We practise strict anonymity and confidentiality, so that our meetings are a safe place for all of us. Whoever we meet and whatever is said in a meeting is confidential and should not be disclosed to anyone else.</p>`
   },
   {
     short: "Message\nof Hope",
     label: "A Message of Hope",
-    pages: [
-      { subtitle: "For sex addicts in the LGBT communities - adapted from SAA literature", content: `<p>Sex Addicts Anonymous is a spiritual program based on the principles and traditions of Alcoholics Anonymous. We are grateful to A.A. for this gift which makes our recovery possible.</p><p>Our primary purpose is to stop our addictive sexual behaviour and to help others recover from sexual addiction. Membership is open to all who have a desire to stop addictive sexual behaviour. There is no other requirement.</p>` },
-      { subtitle: "For sex addicts in the LGBT communities - adapted from SAA literature", content: `<p>Our fellowship is open to anyone regardless of age, race, religion, ethnic background, marital status, or occupation. We welcome members of any sexual orientation or gender.</p><p>Many of our sexual behaviours produced negative consequences. These behaviours are not gender specific and may cross lines of sexual orientation.</p>` },
-      { subtitle: "For sex addicts in the LGBT communities - adapted from SAA literature", content: `<p>For many of us, the spiral of sexual addiction led to what we called "hitting rock bottom" - to reach such a low point mentally, physically, emotionally, and spiritually that we break through our denial.</p><p>We now use our sense of surrender in a healthy manner. Now we start to surrender and become teachable, to a healthier way of life filled with hope, growth, and change.</p>` }
-    ]
+    subtitle: "For sex addicts in the LGBT communities - adapted from SAA literature",
+    content: `<p>Sex Addicts Anonymous is a spiritual program based on the principles and traditions of Alcoholics Anonymous. We are grateful to A.A. for this gift which makes our recovery possible.</p>
+      <p>Our primary purpose is to stop our addictive sexual behaviour and to help others recover from sexual addiction. Membership is open to all who have a desire to stop addictive sexual behaviour. There is no other requirement.</p>
+      <p>Our fellowship is open to anyone regardless of age, race, religion, ethnic background, marital status, or occupation. We welcome members of any sexual orientation or gender.</p>
+      <p>Many of our sexual behaviours produced negative consequences. These behaviours are not gender specific and may cross lines of sexual orientation.</p>
+      <p>For many of us, the spiral of sexual addiction led to what we called "hitting rock bottom" - to reach such a low point mentally, physically, emotionally, and spiritually that we break through our denial.</p>
+      <p>We now use our sense of surrender in a healthy manner. Now we start to surrender and become teachable, to a healthier way of life filled with hope, growth, and change.</p>`
   },
-  {
-    short: "Chips",
-    label: "Chips",
-    type: "chips",
-    pages: [{ content: "" }]
-  },
-  {
-    short: "Links",
-    label: "Links",
-    type: "links",
-    pages: [{ content: "" }]
-  },
+  { short: "Chips", label: "Chips", type: "chips" },
+  { short: "Links", label: "Links", type: "links" },
   {
     short: "Keep\nComing Back",
     label: "Keep Coming Back",
-    pages: [
-      { content: `<p>We have had to work at staying sexually sober, as well as rebuilding our lives and relationships. Sometimes the steps seemed overwhelming. But we found that we had several things working in our favor. We had time and energy available that we used to waste on our addiction. We had our new friends in recovery. And most importantly, we had the God of our understanding to sustain us. Through the program, we were able to face problems that we never had the courage to face before, and to do things we never imagined possible.</p>` },
-      { content: `<p>Each of us has taken steps of courage and leaps of faith. Each of us has contributed, not only to our own recovery, but to the recovery of other suffering sex addicts as well. We have contributed by showing up at meetings and by sharing our experience, strength, and hope.</p><p>We have listened to our fellow addicts and supported them in their recovery journey. Like the first members of our fellowship, we continue to remain sexually sober by helping our fellow addicts stay sober. Our prayer is that every sex addict who seeks recovery will have the opportunity to find it.</p><p style="font-weight:500;font-style:italic;">And keep coming back.</p>` }
-    ]
+    content: `<p>We have had to work at staying sexually sober, as well as rebuilding our lives and relationships. Sometimes the steps seemed overwhelming. But we found that we had several things working in our favor. We had time and energy available that we used to waste on our addiction. We had our new friends in recovery. And most importantly, we had the God of our understanding to sustain us. Through the program, we were able to face problems that we never had the courage to face before, and to do things we never imagined possible.</p>
+      <p>Each of us has taken steps of courage and leaps of faith. Each of us has contributed, not only to our own recovery, but to the recovery of other suffering sex addicts as well. We have contributed by showing up at meetings and by sharing our experience, strength, and hope.</p>
+      <p>We have listened to our fellow addicts and supported them in their recovery journey. Like the first members of our fellowship, we continue to remain sexually sober by helping our fellow addicts stay sober. Our prayer is that every sex addict who seeks recovery will have the opportunity to find it.</p>
+      <p style="font-weight:500;font-style:italic;">And keep coming back.</p>`
   },
   {
     short: "The\nPromises",
     label: "The Promises",
-    pages: [
-      { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<p>If we are painstaking about this phase of our development, we will be amazed before we are half way through.</p><ul><li>We are going to know a new freedom and a new happiness.</li><li>We will not regret the past nor wish to shut the door on it.</li><li>We will comprehend the word serenity and we will know peace.</li><li>No matter how far down the scale we have gone, we will see how our experience can benefit others.</li><li>That feeling of uselessness and self-pity will disappear.</li></ul>` },
-      { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<ul><li>We will lose interest in selfish things and gain interest in our fellows.</li><li>Self-seeking will slip away.</li><li>Our whole attitude and outlook upon life will change.</li><li>Fear of people and of economic insecurity will leave us.</li><li>We will intuitively know how to handle situations which used to baffle us.</li><li>We will suddenly realise that God is doing for us what we could not do for ourselves.</li></ul>` },
-      { subtitle: "Alcoholics Anonymous, p. 83–84", content: `<p>Are these extravagant promises? We think not.</p><p>They are being fulfilled among us - sometimes quickly, sometimes slowly. They will always materialise if we work for them.</p>` }
-    ]
+    subtitle: "Alcoholics Anonymous, p. 83–84",
+    content: `<p>If we are painstaking about this phase of our development, we will be amazed before we are half way through.</p>
+      <ul>
+        <li>We are going to know a new freedom and a new happiness.</li>
+        <li>We will not regret the past nor wish to shut the door on it.</li>
+        <li>We will comprehend the word serenity and we will know peace.</li>
+        <li>No matter how far down the scale we have gone, we will see how our experience can benefit others.</li>
+        <li>That feeling of uselessness and self-pity will disappear.</li>
+        <li>We will lose interest in selfish things and gain interest in our fellows.</li>
+        <li>Self-seeking will slip away.</li>
+        <li>Our whole attitude and outlook upon life will change.</li>
+        <li>Fear of people and of economic insecurity will leave us.</li>
+        <li>We will intuitively know how to handle situations which used to baffle us.</li>
+        <li>We will suddenly realise that God is doing for us what we could not do for ourselves.</li>
+      </ul>
+      <p style="margin-top:1rem;">Are these extravagant promises? We think not. They are being fulfilled among us - sometimes quickly, sometimes slowly. They will always materialise if we work for them.</p>`
   }
 ];
-
-let flat = [];
-sections.forEach((sec, si) => {
-  sec.pages.forEach((page, pi) => {
-    flat.push({ si, pi, total: sec.pages.length, short: sec.short, label: sec.label, subtitle: page.subtitle||null, content: page.content, type: sec.type||'text' });
-  });
-});
 
 let cur = 0;
 const nav = document.getElementById('mainNav');
@@ -507,21 +527,15 @@ const navList = document.getElementById('navList');
 const slidesEl = document.getElementById('slides');
 const totalSections = sections.length;
 
-// Build nav
 sections.forEach((sec, si) => {
   const li = document.createElement('li');
   const btn = document.createElement('button');
   btn.textContent = sec.short;
-  btn.onclick = () => {
-    const targetIdx = flat.findIndex(s => s.si === si);
-    go(targetIdx);
-  };
+  btn.onclick = () => go(si);
   btn.addEventListener('mousemove', (e) => {
     const rect = btn.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    nav.style.setProperty('--tilt-bg-y', (-(x - rect.width/2)/20) * 2);
-    nav.style.setProperty('--tilt-bg-x', (-(y - rect.height/2)/20) * 2);
+    nav.style.setProperty('--tilt-bg-y', (-(e.clientX - rect.left - rect.width/2)/20) * 2);
+    nav.style.setProperty('--tilt-bg-x', (-(e.clientY - rect.top - rect.height/2)/20) * 2);
   });
   li.appendChild(btn);
   navList.appendChild(li);
@@ -555,26 +569,20 @@ function activateNavItem(si) {
   const li = lis[si];
   if (!li) return;
   li.classList.add('active');
-
-  // Set position attribute for border-radius
   if (si === 0) nav.setAttribute('data-pos', 'first');
   else if (si === totalSections - 1) nav.setAttribute('data-pos', 'last');
   else nav.setAttribute('data-pos', 'middle');
-
-  // Slide the glow
   const width = li.offsetWidth;
   const offsetLeft = li.getBoundingClientRect().left - nav.getBoundingClientRect().left;
   nav.style.setProperty('--after-bg-position', offsetLeft);
   nav.style.setProperty('--after-radial-bg-position', offsetLeft + width / 2);
   nav.style.setProperty('--after-bg-width', width);
-
   setActiveColor(si);
 }
 
-// Build slides
-function buildChipsSlide(idx) {
+function buildChipsSlide(si) {
   const div = document.createElement('div');
-  div.className = 'slide'; div.id = 's' + idx;
+  div.className = 'slide'; div.id = 's' + si;
   div.innerHTML = `
     <div class="slide-inner" style="justify-content:flex-start;padding-top:0.5rem;">
       <div class="section-label">Chips</div>
@@ -592,15 +600,15 @@ function buildChipsSlide(idx) {
       </div>
     </div>
     <div class="nav-btns">
-      <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?'disabled':''}>← Back</button>
-      <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?'disabled':''}>Next →</button>
+      <button class="nav-btn" onclick="go(${si-1})" ${si===0?'disabled':''}>← Back</button>
+      <button class="nav-btn" onclick="go(${si+1})" ${si===totalSections-1?'disabled':''}>Next →</button>
     </div>`;
   return div;
 }
 
-function buildLinksSlide(idx) {
+function buildLinksSlide(si) {
   const div = document.createElement('div');
-  div.className = 'slide'; div.id = 's' + idx;
+  div.className = 'slide'; div.id = 's' + si;
   div.innerHTML = `
     <div class="slide-inner links-inner">
       <div class="section-label">Links</div>
@@ -629,35 +637,30 @@ function buildLinksSlide(idx) {
       </div>
     </div>
     <div class="nav-btns">
-      <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?'disabled':''}>← Back</button>
-      <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?'disabled':''}>Next →</button>
+      <button class="nav-btn" onclick="go(${si-1})" ${si===0?'disabled':''}>← Back</button>
+      <button class="nav-btn" onclick="go(${si+1})" ${si===totalSections-1?'disabled':''}>Next →</button>
     </div>`;
   return div;
 }
 
-flat.forEach((slide, idx) => {
+sections.forEach((sec, si) => {
   let div;
-  if (slide.type === 'chips') { div = buildChipsSlide(idx); }
-  else if (slide.type === 'links') { div = buildLinksSlide(idx); }
+  if (sec.type === 'chips') { div = buildChipsSlide(si); }
+  else if (sec.type === 'links') { div = buildLinksSlide(si); }
   else {
     div = document.createElement('div');
-    div.className = 'slide'; div.id = 's' + idx;
-    const fillPct = Math.round(((slide.pi + 1) / slide.total) * 100);
-    const pager = slide.total > 1
-      ? `<div class="page-number">${slide.pi + 1} of ${slide.total}</div><div class="page-indicator"><div class="page-indicator-fill" style="width:${fillPct}%"></div></div>`
-      : '';
-    const sub = slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : '';
+    div.className = 'slide'; div.id = 's' + si;
+    const sub = sec.subtitle ? `<div class="slide-subtitle">${sec.subtitle}</div>` : '';
     div.innerHTML = `
       <div class="slide-inner">
-        <div class="section-label">${slide.short.replace('\n',' ')}</div>
-        <div class="slide-title">${slide.label}</div>
+        <div class="section-label">${sec.short.replace('\n',' ')}</div>
+        <div class="slide-title">${sec.label}</div>
         ${sub}
-        <div class="slide-body">${slide.content}</div>
+        <div class="slide-body">${sec.content}</div>
       </div>
-      ${pager}
       <div class="nav-btns">
-        <button class="nav-btn" onclick="go(${idx-1})" ${idx===0?'disabled':''}>← Back</button>
-        <button class="nav-btn" onclick="go(${idx+1})" ${idx===flat.length-1?'disabled':''}>Next →</button>
+        <button class="nav-btn" onclick="go(${si-1})" ${si===0?'disabled':''}>← Back</button>
+        <button class="nav-btn" onclick="go(${si+1})" ${si===totalSections-1?'disabled':''}>Next →</button>
       </div>`;
   }
   slidesEl.appendChild(div);
@@ -670,7 +673,6 @@ function setEyeState(open) {
   const path = document.getElementById('eyePath');
   if (path) path.setAttribute('d', open ? EYE_OPEN : EYE_CLOSED);
 }
-
 function toggleEye() {
   document.querySelectorAll('.chips-image-panel img').forEach(img => img.classList.remove('visible'));
   document.querySelectorAll('.milestone-btn').forEach(b => b.classList.remove('active'));
@@ -678,7 +680,6 @@ function toggleEye() {
   if (placeholder) placeholder.classList.remove('hidden');
   setEyeState(false);
 }
-
 function showChip(milestone, btn) {
   document.querySelectorAll('.chips-image-panel img').forEach(img => img.classList.remove('visible'));
   document.querySelectorAll('.milestone-btn').forEach(b => b.classList.remove('active'));
@@ -690,22 +691,33 @@ function showChip(milestone, btn) {
 }
 
 function go(idx) {
-  if (idx < 0 || idx >= flat.length) return;
+  if (idx < 0 || idx >= totalSections) return;
   document.getElementById('s'+cur).classList.remove('active');
   cur = idx;
   document.getElementById('s'+cur).classList.add('active');
-  activateNavItem(flat[cur].si);
+  activateNavItem(cur);
+}
+
+let isDark = true;
+function toggleMode() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('modeBtn').textContent = isDark ? '🌙' : '☀️';
+  buildNavGradient();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('s0').classList.add('active');
   setTimeout(() => { buildNavGradient(); activateNavItem(0); }, 50);
 });
-
-window.addEventListener('resize', () => { buildNavGradient(); activateNavItem(flat[cur].si); });
+window.addEventListener('resize', () => { buildNavGradient(); activateNavItem(cur); });
 window.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); go(cur + 1); }
-  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(cur - 1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); go(cur + 1); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+  else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    const inner = document.querySelector('#s' + cur + ' .slide-inner');
+    if (inner) { e.preventDefault(); inner.scrollBy({ top: e.key === 'ArrowDown' ? 120 : -120, behavior: 'smooth' }); }
+  }
 });
 </script>
 </body>
