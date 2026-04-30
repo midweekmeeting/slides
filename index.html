@@ -255,11 +255,24 @@
   }
 
   .page-indicator {
-    font-size: 12px;
-    color: rgb(255 255 255 / 30%);
-    text-align: center;
-    margin-bottom: 0.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 0.75rem;
     flex-shrink: 0;
+  }
+  .page-pip {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 20%);
+    transition: background 0.25s ease, transform 0.25s ease;
+    flex-shrink: 0;
+  }
+  .page-pip.active {
+    background: var(--active-color);
+    transform: scale(1.35);
   }
 
   .nav-btns {
@@ -623,7 +636,10 @@ flat.forEach((slide, idx) => {
   else {
     div = document.createElement('div');
     div.className = 'slide'; div.id = 's' + idx;
-    const pager = slide.total > 1 ? `<div class="page-indicator">${slide.pi+1} of ${slide.total}</div>` : '';
+    const pager = slide.total > 1
+      ? `<div class="page-indicator">${Array.from({length: slide.total}, (_, i) =>
+          `<div class="page-pip${i === slide.pi ? ' active' : ''}"></div>`).join('')}</div>`
+      : '';
     const sub = slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : '';
     div.innerHTML = `
       <div class="slide-inner">
