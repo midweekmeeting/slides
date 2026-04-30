@@ -255,24 +255,20 @@
   }
 
   .page-indicator {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 7px;
-    margin-bottom: 0.75rem;
+    position: relative;
+    height: 3px;
+    background: rgb(255 255 255 / 10%);
+    border-radius: 0 0 2px 2px;
     flex-shrink: 0;
+    overflow: hidden;
+    margin-bottom: 0.85rem;
   }
-  .page-pip {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgb(255 255 255 / 20%);
-    transition: background 0.25s ease, transform 0.25s ease;
-    flex-shrink: 0;
-  }
-  .page-pip.active {
-    background: var(--active-color);
-    transform: scale(1.35);
+  .page-indicator-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: 0 0 2px 2px;
+    background: linear-gradient(to right, rgb(255 255 255 / 30%), var(--active-color));
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
   }
 
   .nav-btns {
@@ -636,9 +632,9 @@ flat.forEach((slide, idx) => {
   else {
     div = document.createElement('div');
     div.className = 'slide'; div.id = 's' + idx;
+    const fillPct = Math.round(((slide.pi + 1) / slide.total) * 100);
     const pager = slide.total > 1
-      ? `<div class="page-indicator">${Array.from({length: slide.total}, (_, i) =>
-          `<div class="page-pip${i === slide.pi ? ' active' : ''}"></div>`).join('')}</div>`
+      ? `<div class="page-indicator"><div class="page-indicator-fill" style="width:${fillPct}%"></div></div>`
       : '';
     const sub = slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : '';
     div.innerHTML = `
