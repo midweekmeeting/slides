@@ -254,6 +254,16 @@
     font-family: Georgia, "Times New Roman", serif;
   }
 
+  .page-number {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: rgb(255 255 255 / 35%);
+    margin-bottom: 0.4rem;
+    flex-shrink: 0;
+  }
+
   .page-indicator {
     position: relative;
     height: 3px;
@@ -634,7 +644,7 @@ flat.forEach((slide, idx) => {
     div.className = 'slide'; div.id = 's' + idx;
     const fillPct = Math.round(((slide.pi + 1) / slide.total) * 100);
     const pager = slide.total > 1
-      ? `<div class="page-indicator"><div class="page-indicator-fill" style="width:${fillPct}%"></div></div>`
+      ? `<div class="page-number">${slide.pi + 1} of ${slide.total}</div><div class="page-indicator"><div class="page-indicator-fill" style="width:${fillPct}%"></div></div>`
       : '';
     const sub = slide.subtitle ? `<div class="slide-subtitle">${slide.subtitle}</div>` : '';
     div.innerHTML = `
