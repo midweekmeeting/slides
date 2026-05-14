@@ -292,6 +292,21 @@
     transition: color 0.3s ease;
   }
 
+  .slide-title-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.85rem;
+    flex-shrink: 0;
+  }
+  .slide-title-row .slide-title {
+    margin-bottom: 0;
+  }
+  .slide-title-row .slide-subtitle {
+    margin-bottom: 0;
+  }
+
   .slide-body {
     font-size: clamp(14px, 2vw, 18px);
     color: var(--slide-body-color);
@@ -430,6 +445,7 @@ const sections = [
     short: "12\nSteps",
     label: "The Twelve Steps of SAA",
     subtitle: "Sex Addicts Anonymous, p. 20–21",
+    noLabel: true,
     content: `<ol>
       <li>We admitted we were powerless over addictive sexual behaviour - that our lives had become unmanageable.</li>
       <li>Came to believe that a Power greater than ourselves could restore us to sanity.</li>
@@ -449,6 +465,7 @@ const sections = [
     short: "12\nTraditions",
     label: "The Twelve Traditions of SAA",
     subtitle: "Sex Addicts Anonymous, p. 77",
+    noLabel: true,
     content: `<ol>
       <li>Our common welfare should come first; personal recovery depends upon SAA unity.</li>
       <li>For our group purpose there is but one ultimate authority - a loving God as expressed in our group conscience. Our leaders are but trusted servants; they do not govern.</li>
@@ -496,6 +513,7 @@ const sections = [
     short: "The\nPromises",
     label: "The Promises",
     subtitle: "Alcoholics Anonymous, p. 83–84",
+    noLabel: true,
     content: `<p>If we are painstaking about this phase of our development, we will be amazed before we are half way through.</p>
       <ul>
         <li>We are going to know a new freedom and a new happiness.</li>
@@ -511,6 +529,14 @@ const sections = [
         <li>We will suddenly realise that God is doing for us what we could not do for ourselves.</li>
       </ul>
       <p style="margin-top:1rem;">Are these extravagant promises? <strong style="font-style:italic;">We think not.</strong> They are being fulfilled among us - sometimes quickly, sometimes slowly. They will always materialise if we work for them.</p>`
+  },
+  {
+    short: "Closing\nPrayer",
+    label: "Closing Prayer",
+    content: `<p>We take a moment to remind ourselves that we never need to stand alone again, unless we choose to.</p>
+      <p>Lets have a moment of silence for the suffering addicts inside and outside these virtual rooms, as well as for the children born into addiction.</p>
+      <p>We'll then say the Serenity Prayer using the word "God" as you understand that word.</p>
+      <p>As we say the Serenity Prayer lets take a moment to look each other in the eye and remember that in this fellowship we are moving from shame to grace.</p>`
   }
 ];
 
@@ -643,12 +669,18 @@ sections.forEach((sec, si) => {
   else {
     div = document.createElement('div');
     div.className = 'slide'; div.id = 's' + si;
-    const sub = sec.subtitle ? `<div class="slide-subtitle">${sec.subtitle}</div>` : '';
+    const labelHtml = sec.noLabel ? '' : `<div class="section-label">${sec.short.replace('\n',' ')}</div>`;
+    let titleHtml;
+    if (sec.subtitle && sec.noLabel) {
+      titleHtml = `<div class="slide-title-row"><div class="slide-title">${sec.label}</div><div class="slide-subtitle">${sec.subtitle}</div></div>`;
+    } else {
+      const sub = sec.subtitle ? `<div class="slide-subtitle">${sec.subtitle}</div>` : '';
+      titleHtml = `<div class="slide-title">${sec.label}</div>${sub}`;
+    }
     div.innerHTML = `
       <div class="slide-inner">
-        <div class="section-label">${sec.short.replace('\n',' ')}</div>
-        <div class="slide-title">${sec.label}</div>
-        ${sub}
+        ${labelHtml}
+        ${titleHtml}
         <div class="slide-body">${sec.content}</div>
       </div>
       <div class="nav-btns">
