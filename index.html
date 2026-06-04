@@ -34,8 +34,8 @@
     --milestone-hover-border: rgba(255,255,255,0.25);
     --milestone-active-bg: rgba(255,255,255,0.15);
     --milestone-active-border: rgba(255,255,255,0.40);
-    --chips-placeholder-border: rgba(255,255,255,0.15);
-    --chips-placeholder-color: rgba(255,255,255,0.25);
+    --coins-placeholder-border: rgba(255,255,255,0.15);
+    --coins-placeholder-color: rgba(255,255,255,0.25);
     --mode-btn-bg: rgba(255,255,255,0.07);
     --mode-btn-border: rgba(255,255,255,0.15);
     --mode-btn-color: rgba(255,255,255,0.55);
@@ -65,8 +65,8 @@
     --milestone-hover-border: rgba(0,0,0,0.20);
     --milestone-active-bg: rgba(0,0,0,0.10);
     --milestone-active-border: rgba(0,0,0,0.30);
-    --chips-placeholder-border: rgba(0,0,0,0.12);
-    --chips-placeholder-color: rgba(0,0,0,0.25);
+    --coins-placeholder-border: rgba(0,0,0,0.12);
+    --coins-placeholder-color: rgba(0,0,0,0.25);
     --mode-btn-bg: rgba(0,0,0,0.05);
     --mode-btn-border: rgba(0,0,0,0.12);
     --mode-btn-color: hsl(221deg 10% 40%);
@@ -349,14 +349,14 @@
   .nav-btn:hover { background: var(--active-color-dim); }
   .nav-btn:disabled { opacity: 0.2; cursor: default; }
 
-  /* ── Chips ── */
-  .chips-layout { display: flex; gap: 2rem; flex: 1; overflow: hidden; align-items: center; }
-  .chips-image-panel {
+  /* ── Coins ── */
+  .coins-layout { display: flex; gap: 2rem; flex: 1; overflow: hidden; align-items: center; }
+  .coins-image-panel {
     flex: 0 0 40%;
     display: flex; align-items: center; justify-content: center;
     height: 100%; position: relative;
   }
-  .chips-image-panel img {
+  .coins-image-panel img {
     max-height: 100%; max-width: 100%;
     object-fit: contain;
     position: absolute;
@@ -370,17 +370,17 @@
     75%  { transform: scale(0.96) rotate(-1deg); }
     100% { opacity: 1; transform: scale(1) rotate(0deg); }
   }
-  .chips-image-panel img.visible { animation: chipPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-  .chips-placeholder {
+  .coins-image-panel img.visible { animation: chipPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .coins-placeholder {
     width: 200px; height: 200px; border-radius: 50%;
-    border: 2px dashed var(--chips-placeholder-border);
+    border: 2px dashed var(--coins-placeholder-border);
     display: flex; align-items: center; justify-content: center;
-    color: var(--chips-placeholder-color); font-size: 14px;
+    color: var(--coins-placeholder-color); font-size: 14px;
     text-align: center; padding: 1rem; transition: opacity 0.2s, border-color 0.3s, color 0.3s;
   }
-  .chips-placeholder.hidden { opacity: 0; }
-  .chips-controls { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; }
-  .chips-controls h2 { font-size: clamp(18px, 2vw, 26px); font-weight: 500; color: var(--text-primary); margin-bottom: 0.75rem; transition: color 0.3s; }
+  .coins-placeholder.hidden { opacity: 0; }
+  .coins-controls { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; overflow-y: auto; }
+  .coins-controls h2 { font-size: clamp(18px, 2vw, 26px); font-weight: 500; color: var(--text-primary); margin-bottom: 0.75rem; transition: color 0.3s; }
   .milestone-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; }
   .milestone-btn {
     padding: 10px 6px;
@@ -474,7 +474,7 @@ const sections = [
       <li>Each group should be autonomous except in matters affecting other groups or SAA as a whole.</li>
       <li>Each group has but one primary purpose - to carry its message to the sex addict who still suffers.</li>
       <li>An SAA group ought never endorse, finance, or lend the SAA name to any related facility or outside enterprise, lest problems of money, property, and prestige divert us from our primary purpose.</li>
-      <li>Every SAA group ought to be fully self-supporting.</li>
+      <li>Every SAA group ought to be fully self-supporting, declining outside contributions.</li>
       <li>SAA should remain forever nonprofessional, but our service centres may employ special workers.</li>
       <li>SAA, as such, ought never be organised; but we may create service boards or committees directly responsible to those they serve.</li>
       <li>SAA has no opinion on outside issues; hence the SAA name ought never be drawn into public controversy.</li>
@@ -501,7 +501,7 @@ const sections = [
     content: `<p>Sex Addicts Anonymous is a spiritual program based on the principles and traditions of Alcoholics Anonymous. We are grateful to A.A. for this gift which makes our recovery possible. Our primary purpose is to stop our addictive sexual behaviour and to help others recover from sexual addiction. Membership is open to all who have a desire to stop addictive sexual behaviour. There is no other requirement. Our fellowship is open to anyone regardless of age, race, religion, ethnic background, marital status, or occupation. We welcome members of any sexual orientation or gender.</p>
       <p>Many of our sexual behaviours produced negative consequences. These behaviours are not gender specific and may cross lines of sexual orientation. For many of us, the spiral of sexual addiction led to what we called "hitting rock bottom" - to reach such a low point mentally, physically, emotionally, and spiritually that we break through our denial. We now use our sense of surrender in a healthy manner. Now we start to surrender and become teachable, to a healthier way of life filled with hope, growth, and change.</p>`
   },
-  { short: "Chips", label: "Chips", type: "chips" },
+  { short: "Coins", label: "Coins", type: "coins" },
   { short: "Links", label: "Links", type: "links" },
   {
     short: "Keep\nComing Back",
@@ -600,18 +600,18 @@ function activateNavItem(si) {
   setActiveColor(si);
 }
 
-function buildChipsSlide(si) {
+function buildCoinsSlide(si) {
   const div = document.createElement('div');
   div.className = 'slide'; div.id = 's' + si;
   div.innerHTML = `
     <div class="slide-inner" style="justify-content:flex-start;padding-top:0.5rem;">
-      <div class="section-label">Chips</div>
-      <div class="chips-layout">
-        <div class="chips-image-panel" id="chipsImgPanel">
-          <div class="chips-placeholder" id="chipsPlaceholder">Select a milestone to reveal the chip</div>
-          ${milestones.map(m=>`<img id="chip-${m}" src="chips/${m}.png" alt="${m} chip">`).join('')}
+      <div class="section-label">Coins</div>
+      <div class="coins-layout">
+        <div class="coins-image-panel" id="coinsImgPanel">
+          <div class="coins-placeholder" id="coinsPlaceholder">Select a milestone to reveal the chip</div>
+          ${milestones.map(m=>`<img id="chip-${m}" src="coins/${m}.png" alt="${m} chip">`).join('')}
         </div>
-        <div class="chips-controls">
+        <div class="coins-controls">
           <h2 style="display:flex;align-items:center;gap:0.6rem;">What milestone are we celebrating?<button id="eyeToggleBtn" onclick="toggleEye()" title="Clear selection" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;color:var(--active-color);opacity:0.5;transition:opacity 0.15s, color 0.3s ease;flex-shrink:0;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'"><svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="22" height="22" fill="currentColor"><path id="eyePath" d="M610.4 325.8L602.8 335.1C586.4 355 567.1 372.6 546.6 388.4L601.1 482.8L559.5 506.8L507.1 416C490.1 426.6 470.9 436.8 449.8 445.6L477.6 549.5L431.2 561.9L404.1 461C385.2 466 365.2 469.5 344.1 471.1L344.1 576.1L296.1 576.1L296.1 471.1C275 469.5 255 466 236.1 461L209.1 561.9L162.7 549.5L190.5 445.6C169.4 436.9 150.2 426.7 133.2 416.1L80.8 506.9L39.2 482.9L93.6 388.6C73.3 372.7 54 355.1 37.6 335.2L30 325.9L67.2 295.7L74.7 305C93.7 327.9 117.5 347.5 141.8 364.4C185.3 394.7 246.6 424.1 320.1 424.1C393.6 424.1 454.8 394.7 498.4 364.4C522.7 347.5 546.5 327.8 565.5 305L573 295.7L610.3 325.9z"/></svg></button></h2>
           <div class="milestone-grid">
             ${milestones.map(m=>`<button class="milestone-btn" onclick="showChip('${m}',this)">${m}</button>`).join('')}
@@ -665,7 +665,7 @@ function buildLinksSlide(si) {
 
 sections.forEach((sec, si) => {
   let div;
-  if (sec.type === 'chips') { div = buildChipsSlide(si); }
+  if (sec.type === 'coins') { div = buildCoinsSlide(si); }
   else if (sec.type === 'links') { div = buildLinksSlide(si); }
   else {
     div = document.createElement('div');
@@ -700,16 +700,16 @@ function setEyeState(open) {
   if (path) path.setAttribute('d', open ? EYE_OPEN : EYE_CLOSED);
 }
 function toggleEye() {
-  document.querySelectorAll('.chips-image-panel img').forEach(img => img.classList.remove('visible'));
+  document.querySelectorAll('.coins-image-panel img').forEach(img => img.classList.remove('visible'));
   document.querySelectorAll('.milestone-btn').forEach(b => b.classList.remove('active'));
-  const placeholder = document.getElementById('chipsPlaceholder');
+  const placeholder = document.getElementById('coinsPlaceholder');
   if (placeholder) placeholder.classList.remove('hidden');
   setEyeState(false);
 }
 function showChip(milestone, btn) {
-  document.querySelectorAll('.chips-image-panel img').forEach(img => img.classList.remove('visible'));
+  document.querySelectorAll('.coins-image-panel img').forEach(img => img.classList.remove('visible'));
   document.querySelectorAll('.milestone-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('chipsPlaceholder').classList.add('hidden');
+  document.getElementById('coinsPlaceholder').classList.add('hidden');
   const img = document.getElementById('chip-' + milestone);
   if (img) { void img.offsetWidth; img.classList.add('visible'); }
   btn.classList.add('active');
